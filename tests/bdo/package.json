@@ -1,0 +1,9 @@
+{
+  "name": "@sharon/bdo-tests",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "cd mocha && npm test"
+  },
+  "description": "BDO service tests for Sharon"
+}

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sharon Test Report - 2025-09-24-1759</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 1.1em; }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .summary-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid #3182ce;
+        }
+        .summary-card.passed { border-left-color: #38a169; }
+        .summary-card.failed { border-left-color: #e53e3e; }
+        .summary-card h3 { color: #4a5568; margin-bottom: 10px; }
+        .summary-card .number { font-size: 2.5em; font-weight: bold; color: #2d3748; }
+        .results {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .results-header {
+            background: #4a5568;
+            color: white;
+            padding: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .test-result {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background-color 0.2s;
+        }
+        .test-result:hover { background-color: #f7fafc; }
+        .test-result:last-child { border-bottom: none; }
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .test-name { font-weight: bold; font-size: 1.1em; }
+        .status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .status.passed { background: #c6f6d5; color: #22543d; }
+        .status.failed { background: #fed7d7; color: #822727; }
+        .test-duration { color: #718096; font-size: 0.9em; }
+        .test-output {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+            color: #4a5568;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #718096;
+            font-size: 0.9em;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38a169, #48bb78);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Sharon Test Report</h1>
+            <p>Planet Nine Ecosystem Test Results</p>
+            <p><strong>2025-09-24-1759</strong></p>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <p>0% Success Rate</p>
+        </div>
+
+        <div class="summary">
+            <div class="summary-card">
+                <h3>Total Tests</h3>
+                <div class="number">13</div>
+            </div>
+            <div class="summary-card passed">
+                <h3>Passed</h3>
+                <div class="number">0</div>
+            </div>
+            <div class="summary-card failed">
+                <h3>Failed</h3>
+                <div class="number">13</div>
+            </div>
+            <div class="summary-card">
+                <h3>Duration</h3>
+                <div class="number">3s</div>
+            </div>
+        </div>
+
+        <div class="results">
+            <div class="results-header">
+                Test Results
+            </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">sessionless</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">297ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">[31mError: No test files found: &quot;**/*.test.js&quot;[39m
+</div>
+                </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">magic</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">218ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">[31mError: No test files found: &quot;**/*.test.js&quot;[39m
+</div>
+                </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">teleportation</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">202ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">[31mError: No test files found: &quot;**/*.test.js&quot;[39m
+</div>
+                </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">fount</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">13ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">file:///sharon/tests/fount/test-runner.js:12
+const { spawn } = require(&#39;child_process&#39;);
+                  ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a &#39;.js&#39; file extension and &#39;/sharon/tests/fount/package.json&#39; contains &quot;type&quot;: &quot;module&quot;. To treat it as a CommonJS script, rename it to use the &#39;.cjs&#39; file extension.
+    at file:///sharon/tests/fount/test-runner.js:12:19
+    at ModuleJob.run (node:internal/modules/esm/module_job:271:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)
+
+Node.js v22.14.0
+</div>
+                </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">bdo</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">497ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">
+&gt; @sharon/bdo-tests@1.0.0 test
+&gt; cd mocha &amp;&amp; npm test
+
+
+&gt; bdo-test@1.0.0 test
+&gt; mocha *.js --timeout 30000
+
+{
+  baseURL: &#39;https://dev.bdo.allyabase.com/&#39;,
+  createUser: [AsyncFunction: createUser],
+  updateBDO: [AsyncFunction: updateBDO],
+  getBDO: [AsyncFunction: getBDO],
+  getBases: [AsyncFunction: getBases],
+  saveBases: [AsyncFunction: saveBases],
+  getSpellbooks: [AsyncFunction: getSpellbooks],
+  putSpellbook: [AsyncFunction: putSpellbook],
+  deleteUser: [AsyncFunction: deleteUser]
+}
+{
+  baseURL: &#39;http://nginx:80/bdo/&#39;,
+  createUser: [AsyncFunction: createUser],
+  updateBDO: [AsyncFunction: updateBDO],
+  getBDO: [AsyncFunction: getBDO],
+  getBases: [AsyncFunction: getBases],
+  saveBases: [AsyncFunction: saveBases],
+  getSpellbooks: [AsyncFunction: getSpellbooks],
+  putSpellbook: [AsyncFunction: putSpellbook],
+  deleteUser: [AsyncFunction: deleteUser]
+}
+// Generated test keys for alice, bob, caitlyn, dave
+export const TEST_USERS = {
+  alice: {
+    name: &#39;alice&#39;,
+    privateKey: &#39;eba2644c0ae7eff7fd2683fa990ddd420631c333965f7fb595ed33ca6e1d2662&#39;,
+    publicKey: &#39;028aef1d70a383dac833e662803b0dbc1a55a533f8b1d90fbb6f2ccf09fb29718b&#39;
+  },
+  bob: {
+    name: &#39;bob&#39;,
+    privateKey: &#39;f48f43ce9b6c04afc5d2bee4cccf012802718499d75e140068a01c25d121fa38&#39;,
+    publicKey: &#39;037270f2544ccd14e3c62be1d962aebf6c7f3a721eba92c03e764c4886242ada5a&#39;
+  },
+  caitlyn: {
+    name: &#39;caitlyn&#39;,
+    privateKey: &#39;f555ed9be1ddcf69d20459cdaa623d355d6c9e050d22144ffb07b17c0ca46085&#39;,
+    publicKey: &#39;03add66b03400d3600d740e8aea631ea9800feae99c8c24fbbc42c0980e8575a7c&#39;
+  },
+  dave: {
+    name: &#39;dave&#39;,
+    privateKey: &#39;9d48bfdeb2edf47c8495a67fc93a91a92ae9d9886da26a0b02c2b09f83599c0c&#39;,
+    publicKey: &#39;03849e8cf67d330c2e4705be3613db2b20dd21b879171afe4268037f5405ff4ae1&#39;
+  }
+};
+
+export default TEST_USERS;
+
+
+{
+  uuid: &#39;c0cdf62a-0959-4e9a-9707-b7a6fc44f303&#39;,
+  bdo: { foo: &#39;bar&#39;, baz: &#39;new&#39; }
+}
+Alice UUID: c0cdf62a-0959-4e9a-9707-b7a6fc44f303
+  ✔ should register a user (alice)
+{
+  uuid: &#39;d2f42473-a960-4e39-9b09-66c9bdf22a27&#39;,
+  bdo: { foo: &#39;bar&#39;, baz: &#39;another&#39; }
+}
+Bob UUID: d2f42473-a960-4e39-9b09-66c9bdf22a27
+  ✔ should register another user (bob)
+  1) should save bdo
+  2) should get bdo
+  ✔ should save a public bdo
+  3) should get a public bdo
+  4) should save a base
+  5) should get bases
+  ✔ should delete a user
+  ✔ should delete another user
+{
+  uuid: &#39;c0cdf62a-0959-4e9a-9707-b7a6fc44f303&#39;,
+  bdo: { foo: &#39;bar&#39;, baz: &#39;new&#39; }
+}
+Alice UUID: c0cdf62a-0959-4e9a-9707-b7a6fc44f303
+  ✔ should register a user (alice)
+{
+  uuid: &#39;d2f42473-a960-4e39-9b09-66c9bdf22a27&#39;,
+  bdo: { foo: &#39;bar&#39;, baz: &#39;another&#39; }
+}
+Bob UUID: d2f42473-a960-4e39-9b09-66c9bdf22a27
+  ✔ should register another user (bob)
+  6) should save bdo
+  7) should get bdo
+  ✔ should save a public bdo
+  8) should get a public bdo
+  9) should save a base
+  10) should get bases
+  ✔ should delete a user
+  11) should delete another user
+Putting http://nginx:80/bdo/user/create
+{ error: &#39;Auth error&#39; }
+  12) should register a user
+Putting http://nginx:80/bdo/user/create
+{ error: &#39;Auth error&#39; }
+  13) should register another user with a public bdo
+Putting http://nginx:80/bdo/user/undefined/bdo
+{ error: &#39;Auth error&#39; }
+  14) should update bdo
+Getting http://nginx:80/bdo/user/undefined/bdo?timestamp=1758736775610&amp;signature=51dfd68bd1e1ed3e31b831ad7354d952e39cd224fb572363c024ba3e94fd6d7a5e0027b7eab3136e71f9e4ac80a471f0c8c634d60f9402f96c1e35530a6d7c09&amp;hash=hereisanexampleofahash
+{ error: &#39;Auth error&#39; }
+  15) should get bdo
+Putting http://nginx:80/bdo/user/undefined/bdo
+{ error: &#39;Auth error&#39; }
+  16) should update a public bdo
+Getting http://nginx:80/bdo/user/undefined/bdo?timestamp=1758736775616&amp;signature=cc32d10d857a24e1c3cdf207d73aca49819562a3eff9168c05e4e3d661cfaa365f4aaf857e6b37832b8ce160bce53d6aca90b97db9e0de2d62de1f3b4ca151d9&amp;hash=hereisanexampleofahash&amp;pubKey=033898b406f708e892f0af5a5037e54c078839d0765c6d61642ab2daf135eb1f37
+{ error: &#39;Auth error&#39; }
+  17) should get a public bdo
+Putting http://nginx:80/bdo/user/undefined/bases
+bases are { error: &#39;Auth error&#39; }
+  18) should put bases
+Getting http://nginx:80/bdo/user/undefined/bases?timestamp=1758736775621&amp;signature=8981d9a911eb2ae7afb79a833f40d957d25efe120d29dbcf1c1a048c5c6aa74e3c250613fe32831821f65b5ca1aeb18ac1f4cd9f8cf55f92171e0d9985e9167e&amp;hash=hereisanexampleofahash
+res.body for getting bases { error: &#39;Auth error&#39; }
+  19) should get bases
+Getting http://nginx:80/bdo/user/undefined/spellbooks?timestamp=1758736775623&amp;signature=afff2ff978e73b5571acfd76a7928a5c728460d3056f2e698eb2f656a6328a5b6669b143c395cd51cae626608657b3bc4dd350af7b04a17eda31aa5dc2ede4ec&amp;hash=hereisanexampleofahash
+  20) should get spellbooks
+Getting http://nginx:80/bdo/user/undefined/teleport?timestamp=1758736775627&amp;signature=6fd5bbcac58528b58d6b16798a0adb715c32bc365ccbf617f41454fccc2c4cee4eeec7cfa96f11a82973fc3cc1fe2ca49ae04bd3d6417d42cef5bb479249c610&amp;hash=hereisanexampleofahash&amp;url=https%3A%2F%2Fpeaceloveandredistribution.com%2Fa-brief-history-of-teleportation%3FpubKey%3D023031231f669c6504ef5939b6b5e22d2d8be76cf46e98297b810138933de2494f
+  21) should teleport
+{ error: &#39;Auth error&#39; }
+  ✔ should delete a user
+{ error: &#39;Auth error&#39; }
+  ✔ should delete another user
+
+  11 passing (143ms)
+  21 failing
+
+  1) should save bdo:
+     TypeError: Cannot read properties of undefined (reading &#39;baz&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/client-fixed.js:67:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  2) should get bdo:
+     TypeError: Cannot read properties of undefined (reading &#39;baz&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/client-fixed.js:72:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  3) should get a public bdo:
+     TypeError: Cannot read properties of undefined (reading &#39;baz&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/client-fixed.js:92:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  4) should save a base:
+     TypeError: Cannot read properties of undefined (reading &#39;0&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/client-fixed.js:101:15)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  5) should get bases:
+     TypeError: Cannot read properties of undefined (reading &#39;length&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/client-fixed.js:107:7)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  6) should save bdo:
+     TypeError: Cannot read properties of undefined (reading &#39;baz&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/client.js:73:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  7) should get bdo:
+     TypeError: Cannot read properties of undefined (reading &#39;baz&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/client.js:80:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  8) should get a public bdo:
+     TypeError: Cannot read properties of undefined (reading &#39;baz&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/client.js:98:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  9) should save a base:
+     ReferenceError: keys2 is not defined
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/client.js:102:3)
+      at process.processImmediate (node:internal/timers:491:21)
+
+  10) should get bases:
+     TypeError: Cannot read properties of undefined (reading &#39;undefined&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/client.js:139:6)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  11) should delete another user:
+     ReferenceError: keys2 is not defined
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/client.js:148:3)
+      at process.processImmediate (node:internal/timers:491:21)
+
+  12) should register a user:
+     TypeError: Cannot read properties of undefined (reading &#39;length&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/server.js:59:17)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  13) should register another user with a public bdo:
+     TypeError: Cannot read properties of undefined (reading &#39;length&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/server.js:86:17)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  14) should update bdo:
+     TypeError: Cannot read properties of undefined (reading &#39;baz&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/server.js:113:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  15) should get bdo:
+     TypeError: Cannot read properties of undefined (reading &#39;baz&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/server.js:124:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  16) should update a public bdo:
+     TypeError: Cannot read properties of undefined (reading &#39;baz&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/server.js:424:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  17) should get a public bdo:
+     TypeError: Cannot read properties of undefined (reading &#39;baz&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/server.js:437:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  18) should put bases:
+     TypeError: Cannot convert undefined or null to object
+      at Function.keys (&lt;anonymous&gt;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/server.js:511:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  19) should get bases:
+     TypeError: Cannot convert undefined or null to object
+      at Function.keys (&lt;anonymous&gt;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/server.js:523:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  20) should get spellbooks:
+     TypeError: Cannot read properties of undefined (reading &#39;length&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/server.js:534:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  21) should teleport:
+     TypeError: Cannot read properties of undefined (reading &#39;should&#39;)
+      at Context.&lt;anonymous&gt; (file:///sharon/tests/bdo/mocha/server.js:545:18)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+
+
+</div>
+                </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">julia</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">188ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">[31mError: No test files found: &quot;**/*.test.js&quot;[39m
+</div>
+                </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">addie</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">205ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">[31mError: No test files found: &quot;**/*.test.js&quot;[39m
+</div>
+                </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">sanora</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">190ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">[31mError: No test files found: &quot;**/*.test.js&quot;[39m
+</div>
+                </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">dolores</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">186ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">[31mError: No test files found: &quot;**/*.test.js&quot;[39m
+</div>
+                </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">covenant</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">196ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">
+ Exception during run: Error [ERR_REQUIRE_CYCLE_MODULE]: Cannot require() ES Module /sharon/tests/covenant/mocha/client-sdk.test.js in a cycle. (from /sharon/node_modules/mocha/lib/nodejs/esm-utils.js)
+    at ModuleLoader.importSyncForRequire (node:internal/modules/esm/loader:346:15)
+    at loadESMFromCJS (node:internal/modules/cjs/loader:1385:24)
+    at Module._compile (node:internal/modules/cjs/loader:1536:5)
+    at Object..js (node:internal/modules/cjs/loader:1706:10)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:220:24)
+    at Module.require (node:internal/modules/cjs/loader:1311:12)
+    at require (node:internal/modules/helpers:136:16)
+    at exports.requireOrImport (/sharon/node_modules/mocha/lib/nodejs/esm-utils.js:53:16)
+    at async exports.loadFilesAsync (/sharon/node_modules/mocha/lib/nodejs/esm-utils.js:100:20)
+    at async singleRun (/sharon/node_modules/mocha/lib/cli/run-helpers.js:162:3)
+    at async exports.handler (/sharon/node_modules/mocha/lib/cli/run.js:375:5) {
+  code: &#39;ERR_REQUIRE_CYCLE_MODULE&#39;
+}
+</div>
+                </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">permissions</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">53ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">
+&gt; @sharon/permissions-tests@1.0.0 test
+&gt; node test-runner.js
+
+node:internal/modules/cjs/loader:1228
+  throw err;
+  ^
+
+Error: Cannot find module &#39;/sharon/tests/permissions/test-runner.js&#39;
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1225:15)
+    at Function._load (node:internal/modules/cjs/loader:1055:27)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:220:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:170:5)
+    at node:internal/main/run_main_module:36:49 {
+  code: &#39;MODULE_NOT_FOUND&#39;,
+  requireStack: []
+}
+
+Node.js v22.14.0
+</div>
+                </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">cross-service</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">193ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">[31mError: No test files found: &quot;**/*.test.js&quot;[39m
+</div>
+                </div>
+            
+                <div class="test-result">
+                    <div class="test-header">
+                        <span class="test-name">client-server</span>
+                        <div>
+                            <span class="status failed">failed</span>
+                            <span class="test-duration">202ms</span>
+                        </div>
+                    </div>
+                    <div class="test-output">[31mError: No test files found: &quot;**/*.test.js&quot;[39m
+</div>
+                </div>
+            
+        </div>
+
+        <div class="footer">
+            <p>Generated by Sharon - Planet Nine Test Framework</p>
+            <p>Run completed at 9/24/2025, 5:59:37 PM</p>
+        </div>
+    </div>
+</body>
+</html>

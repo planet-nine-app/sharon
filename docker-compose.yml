@@ -1,0 +1,78 @@
+
+services:
+  # Allyabase - All services running in one container (like production)
+  allyabase:
+    build:
+      context: ../allyabase/deployment/docker
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=test
+    volumes:
+      - ../allyabase:/app
+    networks:
+      - sharon-net
+    ports:
+      # Expose all service ports for direct access if needed
+      - "3000:3000"   # continuebee
+      - "3001:3001"   # pref
+      - "3002:3002"   # fount
+      - "3003:3003"   # bdo
+      - "3004:3004"   # joan
+      - "3005:3005"   # addie
+      - "3006:3006"   # julia
+      - "3007:3007"   # dolores
+      - "3008:3008"   # prof
+      - "3009:3009"   # minnie
+      - "3010:3010"   # aretha
+      - "3011:3011"   # covenant
+      - "7243:7243"   # sanora
+      - "7277:7277"   # sanora admin
+      - "2525:2525"   # email
+      - "2999:2999"   # health
+    healthcheck:
+      test: ["CMD", "curl", "-s", "http://localhost:3002/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Nginx proxy for route-based forwarding
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      allyabase:
+        condition: service_healthy
+    volumes:
+      - ./nginx-path-based-test.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx-test.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - sharon-net
+    ports:
+      - "8080:80"
+      - "8443:443"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Sharon test runner
+  sharon:
+    build: .
+    depends_on:
+      nginx:
+        condition: service_healthy
+    environment:
+      - ALLYABASE_BASE_URL=http://nginx:80
+      - NODE_ENV=test
+      - RUN_TESTS=false  # Don't auto-run tests, let the script control it
+    volumes:
+      - .:/sharon
+    networks:
+      - sharon-net
+    working_dir: /sharon
+    command: tail -f /dev/null  # Keep container running for exec commands
+
+networks:
+  sharon-net:
+    driver: bridge

@@ -1,0 +1,19 @@
+{
+  "name": "mocha",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha *.js --timeout 30000"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "addie-js": "^0.0.6",
+    "chai": "^5.1.1",
+    "mocha": "^10.7.3",
+    "sessionless-node": "latest",
+    "superagent": "^10.1.0"
+  }
+}

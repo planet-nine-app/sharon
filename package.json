@@ -1,0 +1,50 @@
+{
+  "name": "sharon",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Comprehensive integration test harness for Planet Nine ecosystem",
+  "scripts": {
+    "test": "npm run test:all",
+    "test:all": "node run-all-tests.js",
+    "test:services": "node run-service-tests.js",
+    "test:protocols": "node run-protocol-tests.js",
+    "test:system": "node run-system-tests.js",
+    "test:permissions": "cd tests/permissions && npm test",
+    "test:fount": "cd tests/fount && npm test",
+    "test:bdo": "cd tests/bdo && npm test",
+    "test:julia": "cd tests/julia && npm test",
+    "test:sanora": "cd tests/sanora && npm test",
+    "test:dolores": "cd tests/dolores && npm test",
+    "test:covenant": "cd tests/covenant && npm test",
+    "test:addie": "cd tests/addie && npm test",
+    "test:sessionless": "cd tests/sessionless && npm test",
+    "test:magic": "cd tests/magic && npm test",
+    "test:teleportation": "cd tests/teleportation && npm test",
+    "env:start": "./start-test-environment.sh",
+    "launch": "./launch-status-check.sh",
+    "env:stop": "docker-compose down",
+    "env:clean": "docker-compose down -v --remove-orphans",
+    "env:logs": "docker-compose logs -f",
+    "env:verify": "docker-compose exec sharon node verify-environment.js",
+    "env:test": "docker-compose exec sharon node run-all-tests.js",
+    "env:test:verbose": "docker-compose exec sharon node run-all-tests.js --verbose",
+    "env:test:quiet": "docker-compose exec sharon node run-all-tests.js --quiet"
+  },
+  "devDependencies": {
+    "mocha": "^10.0.0",
+    "chai": "^4.3.0",
+    "node-fetch": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "testing",
+    "integration",
+    "planet-nine",
+    "allyabase",
+    "microservices"
+  ],
+  "author": "Planet Nine",
+  "license": "MIT"
+}

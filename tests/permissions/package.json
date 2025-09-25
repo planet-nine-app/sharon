@@ -1,0 +1,22 @@
+{
+  "name": "@sharon/permissions-tests",
+  "version": "1.0.0",
+  "description": "Nineum permissions and gating system tests",
+  "main": "test-runner.js",
+  "type": "module",
+  "scripts": {
+    "test": "node test-runner.js",
+    "test:gating": "npx mocha integration/gating-system.test.js --timeout 30000",
+    "test:permissions": "npx mocha integration/nineum-permissions.test.js --timeout 30000"
+  },
+  "keywords": ["permissions", "nineum", "gating", "magic", "planet-nine"],
+  "author": "Planet Nine",
+  "license": "MIT",
+  "dependencies": {
+    "chai": "^5.1.1",
+    "mocha": "^10.7.3",
+    "sessionless-node": "^0.10.1",
+    "node-fetch": "^3.0.0",
+    "fount-js": "latest"
+  }
+}

@@ -1,0 +1,111 @@
+
+const SUBDOMAIN = process.env.SUBDOMAIN || 'dev';
+
+export default {
+  spellbookName: 'allyabase',
+  spellTest: {
+    cost: 400,
+    destinations: [
+	{
+	    stopName: 'test-server',
+	    stopURL: 'http://127.0.0.1:3456/magic/spell/'
+	},
+	{
+	    stopName: 'fount',
+	    stopURL: 'http://127.0.0.1:5117/resolve/'
+	}
+    ],
+    resolver: 'fount',
+    mp: true
+  },
+  joinup: {
+    cost: 400,
+    destinations: [
+      {stopName: 'joan', stopURL: process.env.LOCALHOST ? 'http://localhost:3004/magic/spell/' : `https://${SUBDOMAIN}.joan.allyabase.com/magic/spell/`}, 
+      {stopName: 'bdo', stopURL: process.env.LOCALHOST ? 'http://localhost:3003/magic/spell/' : `https://${SUBDOMAIN}.bdo.allyabase.com/magic/spell/`}, 
+      {stopName: 'julia', stopURL: process.env.LOCALHOST ? 'http://localhost:3000/magic/spell/' : `https://${SUBDOMAIN}.julia.allyabase.com/magic/spell/`},
+      {stopName: 'pref', stopURL: process.env.LOCALHOST ? 'http://localhost:3002/magic/spell/' : `https://${SUBDOMAIN}.pref.allyabase.com/magic/spell/`},
+      {stopName: 'addie', stopURL: process.env.LOCALHOST ? 'http://localhost:3005/magic/spell/' : `https://${SUBDOMAIN}.addie.allyabase.com/magic/spell/`},
+      {stopName: 'fount', stopURL: process.env.LOCALHOST ? 'http://localhost:3006/resolve/' : `https://${SUBDOMAIN}.fount.allyabase.com/resolve/`}
+    ],
+    resolver: 'fount'
+  },
+
+  linkup: {
+    cost: 400,
+    destinations: [
+      {stopName: 'joan', stopURL: process.env.LOCALHOST ? 'http://localhost:3004/magic/spell/' : `https://${SUBDOMAIN}.joan.allyabase.com/magic/spell/`},
+      {stopName: 'bdo', stopURL: process.env.LOCALHOST ? 'http://localhost:3003/magic/spell/' : `https://${SUBDOMAIN}.bdo.allyabase.com/magic/spell/`},
+      {stopName: 'pref', stopURL: process.env.LOCALHOST ? 'http://localhost:3002/magic/spell/' : `https://${SUBDOMAIN}.pref.allyabase.com/magic/spell/`},
+      {stopName: 'addie', stopURL: process.env.LOCALHOST ? 'http://localhost:3005/magic/spell/' : `https://${SUBDOMAIN}.addie.allyabase.com/magic/spell/`},
+      {stopName: 'julia', stopURL: process.env.LOCALHOST ? 'http://localhost:3000/magic/spell/' : `https://${SUBDOMAIN}.julia.allyabase.com/magic/spell/`},
+      {stopName: 'fount', stopURL: process.env.LOCALHOST ? 'http://localhost:3006/resolve/' : `https://${SUBDOMAIN}.fount.allyabase.com/resolve/`}
+    ],
+    resolver: 'fount'
+  },
+
+  // Creation operation spells - require MP and nineum permissions
+  createProduct: {
+    cost: 200, // MP cost
+    destinations: [
+      {stopName: 'julia', stopURL: process.env.LOCALHOST ? 'http://localhost:3007/magic/spell/' : `https://${SUBDOMAIN}.julia.allyabase.com/magic/spell/`},
+      {stopName: 'fount', stopURL: process.env.LOCALHOST ? 'http://localhost:3006/resolve/' : `https://${SUBDOMAIN}.fount.allyabase.com/resolve/`},
+      {stopName: 'sanora', stopURL: process.env.LOCALHOST ? 'http://localhost:7243/magic/spell/' : `https://${SUBDOMAIN}.sanora.allyabase.com/magic/spell/`}
+    ],
+    resolver: 'fount',
+    mp: true,
+    requiredNineum: {
+      galaxy: '01', // Default galaxy for creation operations
+      system: '28880014', // Default system (was "galaxy" in old terminology)
+      flavor: '010103040101' // Example: positive+north+rare+medium+soft+sphere for product creation
+    }
+  },
+
+  createPost: {
+    cost: 100, // MP cost
+    destinations: [
+      {stopName: 'julia', stopURL: process.env.LOCALHOST ? 'http://localhost:3007/magic/spell/' : `https://${SUBDOMAIN}.julia.allyabase.com/magic/spell/`},
+      {stopName: 'fount', stopURL: process.env.LOCALHOST ? 'http://localhost:3006/resolve/' : `https://${SUBDOMAIN}.fount.allyabase.com/resolve/`},
+      {stopName: 'dolores', stopURL: process.env.LOCALHOST ? 'http://localhost:3004/magic/spell/' : `https://${SUBDOMAIN}.dolores.allyabase.com/magic/spell/`}
+    ],
+    resolver: 'fount',
+    mp: true,
+    requiredNineum: {
+      galaxy: '01',
+      system: '28880014',
+      flavor: '010102030201' // Example: positive+north+uncommon+small+bumpy+cylinder for posts
+    }
+  },
+
+  createBDO: {
+    cost: 50, // MP cost
+    destinations: [
+      {stopName: 'julia', stopURL: process.env.LOCALHOST ? 'http://localhost:3007/magic/spell/' : `https://${SUBDOMAIN}.julia.allyabase.com/magic/spell/`},
+      {stopName: 'fount', stopURL: process.env.LOCALHOST ? 'http://localhost:3006/resolve/' : `https://${SUBDOMAIN}.fount.allyabase.com/resolve/`},
+      {stopName: 'bdo', stopURL: process.env.LOCALHOST ? 'http://localhost:3003/magic/spell/' : `https://${SUBDOMAIN}.bdo.allyabase.com/magic/spell/`}
+    ],
+    resolver: 'fount',
+    mp: true,
+    requiredNineum: {
+      galaxy: '01',
+      system: '28880014',
+      flavor: '010101020301' // Example: positive+north+common+tiny+satin+sphere for BDO creation
+    }
+  },
+
+  createVideo: {
+    cost: 150, // MP cost
+    destinations: [
+      {stopName: 'julia', stopURL: process.env.LOCALHOST ? 'http://localhost:3007/magic/spell/' : `https://${SUBDOMAIN}.julia.allyabase.com/magic/spell/`},
+      {stopName: 'fount', stopURL: process.env.LOCALHOST ? 'http://localhost:3006/resolve/' : `https://${SUBDOMAIN}.fount.allyabase.com/resolve/`},
+      {stopName: 'dolores', stopURL: process.env.LOCALHOST ? 'http://localhost:3004/magic/spell/' : `https://${SUBDOMAIN}.dolores.allyabase.com/magic/spell/`}
+    ],
+    resolver: 'fount',
+    mp: true,
+    requiredNineum: {
+      galaxy: '01',
+      system: '28880014',
+      flavor: '010104050401' // Example: positive+north+epic+standard+gritty+cube for video creation
+    }
+  }
+};

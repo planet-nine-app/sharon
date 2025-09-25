@@ -1,0 +1,24 @@
+{
+  "name": "@sharon/fount-tests",
+  "version": "1.0.0",
+  "description": "Fount service integration tests",
+  "main": "test-runner.js",
+  "type": "module",
+  "scripts": {
+    "test": "cd mocha && npm install && npm test",
+    "test:client": "npx mocha client/*.test.js --timeout 30000",
+    "test:server": "npx mocha server/*.test.js --timeout 30000",
+    "test:integration": "npx mocha integration/*.test.js --timeout 30000",
+    "test:runner": "node test-runner.js"
+  },
+  "keywords": ["fount", "testing", "integration", "planet-nine"],
+  "author": "Planet Nine",
+  "license": "MIT",
+  "dependencies": {
+    "chai": "^5.1.1",
+    "mocha": "^10.7.3",
+    "sessionless-node": "^0.10.1",
+    "superagent": "^10.1.0",
+    "node-fetch": "^3.0.0"
+  }
+}

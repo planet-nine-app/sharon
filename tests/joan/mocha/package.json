@@ -1,0 +1,19 @@
+{
+  "name": "joan-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha client.js --timeout 30000"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "joan-js": "^0.0.1",
+    "chai": "^5.1.1",
+    "mocha": "^10.7.3",
+    "sessionless-node": "^0.11.0",
+    "superagent": "^10.1.0"
+  }
+}
