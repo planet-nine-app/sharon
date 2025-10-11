@@ -1,0 +1,134 @@
+{
+  "teacher": {
+    "uuid": "84f2c43c-431e-4ca7-b1f2-c595b68965b3",
+    "pubKey": "02fb739a23c7ec669afce5c469b1b34dc1191c83c4a90a180eb1a190aae0787024"
+  },
+  "student": {
+    "uuid": "8d690fc3-0704-4b37-ab24-4aea73154b53",
+    "pubKey": "03ba23e3f2fe338bfba4a45957ce192318448636e435520780ba84d4a34351c5a6"
+  },
+  "observers": [
+    {
+      "pubKey": "028e4c7e52251f81b7af8191e1f4893ac771ac750e83f86515cfcd713b66443dd9"
+    },
+    {
+      "pubKey": "024b20878883ed0c87bdbe7c494fdba7bf627881647116123a09aba61c63e1ecf9"
+    },
+    {
+      "pubKey": "03558b5c330b39bf4eb9305f29734447195c93e74757801d1f538e07499adbe5fc"
+    },
+    {
+      "pubKey": "030bbd4a2619ba566126a4ff6b7e5ef6d2b4ef01b7a2dba6532a938f7b02485112"
+    }
+  ],
+  "lessonBDO": {
+    "bdoPubKey": "03d46ce867ffba2ef8859d92b60569fbc0d8d0a226e78b984b6534b334a95321c3",
+    "title": "Growing Cucumbers: From Seed to Harvest",
+    "description": "Learn how to grow delicious cucumbers in your garden, from planting seeds to harvesting",
+    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 300\">\n          <rect width=\"400\" height=\"300\" fill=\"#2d5016\"/>\n          <text x=\"200\" y=\"150\" text-anchor=\"middle\" fill=\"#90EE90\" font-size=\"24\" font-family=\"Arial\">\n            🥒 Growing Cucumbers\n          </text>\n          <text x=\"200\" y=\"180\" text-anchor=\"middle\" fill=\"#98FB98\" font-size=\"14\" font-family=\"Arial\">\n            Complete Garden Guide\n          </text>\n        </svg>"
+  },
+  "contract": {
+    "uuid": "703c55aa-b0bc-4ba0-9ef4-006e7d414418",
+    "bdoPubKey": "021cf4643a59ab1a79675280d1f9ee6f4c5ea87607c95cf830f4085b61c910514a",
+    "title": "Lesson: Growing Cucumbers: From Seed to Harvest",
+    "participants": [
+      "02fb739a23c7ec669afce5c469b1b34dc1191c83c4a90a180eb1a190aae0787024",
+      "03ba23e3f2fe338bfba4a45957ce192318448636e435520780ba84d4a34351c5a6"
+    ],
+    "steps": [
+      {
+        "id": "0331f497-7d71-41aa-a69f-adebac974da9",
+        "description": "Payment Completed",
+        "magicSpell": null,
+        "order": 0,
+        "signatures": {
+          "02fb739a23c7ec669afce5c469b1b34dc1191c83c4a90a180eb1a190aae0787024": null,
+          "03ba23e3f2fe338bfba4a45957ce192318448636e435520780ba84d4a34351c5a6": null
+        },
+        "completed": false,
+        "createdAt": "1760166184089"
+      },
+      {
+        "id": "a6b0a5e0-5cdd-4130-b37b-b6133e804924",
+        "description": "Grant Lesson Access",
+        "magicSpell": null,
+        "order": 1,
+        "signatures": {
+          "02fb739a23c7ec669afce5c469b1b34dc1191c83c4a90a180eb1a190aae0787024": null,
+          "03ba23e3f2fe338bfba4a45957ce192318448636e435520780ba84d4a34351c5a6": null
+        },
+        "completed": false,
+        "createdAt": "1760166184089"
+      },
+      {
+        "id": "bc4a40f1-6d7c-4bb5-a9f7-c54e8db9d0cf",
+        "description": "Complete Lesson",
+        "magicSpell": null,
+        "order": 2,
+        "signatures": {
+          "02fb739a23c7ec669afce5c469b1b34dc1191c83c4a90a180eb1a190aae0787024": null,
+          "03ba23e3f2fe338bfba4a45957ce192318448636e435520780ba84d4a34351c5a6": null
+        },
+        "completed": false,
+        "createdAt": "1760166184089"
+      },
+      {
+        "id": "b315fdd4-49a3-4418-a02c-a13f36410ffd",
+        "description": "Verify Completion",
+        "magicSpell": null,
+        "order": 3,
+        "signatures": {
+          "02fb739a23c7ec669afce5c469b1b34dc1191c83c4a90a180eb1a190aae0787024": null,
+          "03ba23e3f2fe338bfba4a45957ce192318448636e435520780ba84d4a34351c5a6": null
+        },
+        "completed": false,
+        "createdAt": "1760166184089"
+      },
+      {
+        "id": "d3dff3f7-ff5f-439b-83c4-fa8ad0f4af37",
+        "description": "Grant Nineum Permission",
+        "magicSpell": null,
+        "order": 4,
+        "signatures": {
+          "02fb739a23c7ec669afce5c469b1b34dc1191c83c4a90a180eb1a190aae0787024": null,
+          "03ba23e3f2fe338bfba4a45957ce192318448636e435520780ba84d4a34351c5a6": null
+        },
+        "completed": false,
+        "createdAt": "1760166184089"
+      }
+    ],
+    "svgContent": null
+  },
+  "contractStepBDOs": [
+    {
+      "stepIndex": 1,
+      "stepDescription": "Grant Lesson Access",
+      "bdoPubKey": "028e4c7e52251f81b7af8191e1f4893ac771ac750e83f86515cfcd713b66443dd9",
+      "bdoUuid": "703c55aa-b0bc-4ba0-9ef4-006e7d414418-step-1"
+    },
+    {
+      "stepIndex": 2,
+      "stepDescription": "Complete Lesson",
+      "bdoPubKey": "024b20878883ed0c87bdbe7c494fdba7bf627881647116123a09aba61c63e1ecf9",
+      "bdoUuid": "703c55aa-b0bc-4ba0-9ef4-006e7d414418-step-2"
+    },
+    {
+      "stepIndex": 3,
+      "stepDescription": "Verify Completion",
+      "bdoPubKey": "03558b5c330b39bf4eb9305f29734447195c93e74757801d1f538e07499adbe5fc",
+      "bdoUuid": "703c55aa-b0bc-4ba0-9ef4-006e7d414418-step-3"
+    },
+    {
+      "stepIndex": 4,
+      "stepDescription": "Grant Nineum Permission",
+      "bdoPubKey": "030bbd4a2619ba566126a4ff6b7e5ef6d2b4ef01b7a2dba6532a938f7b02485112",
+      "bdoUuid": "703c55aa-b0bc-4ba0-9ef4-006e7d414418-step-4"
+    }
+  ],
+  "payment": {
+    "success": true,
+    "transactionId": "txn_1760166184111",
+    "amount": 1999,
+    "processor": "simulated"
+  }
+}

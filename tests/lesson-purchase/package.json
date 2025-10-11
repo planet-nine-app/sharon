@@ -1,0 +1,18 @@
+{
+  "name": "@sharon/lesson-purchase-tests",
+  "version": "1.0.0",
+  "description": "Complete lesson purchase flow integration tests",
+  "type": "module",
+  "scripts": {
+    "test": "node test-runner.js",
+    "serve": "node server.js"
+  },
+  "dependencies": {
+    "chai": "latest",
+    "mocha": "latest",
+    "sessionless-node": "latest",
+    "fount-js": "latest",
+    "bdo-js": "latest",
+    "addie-js": "latest"
+  }
+}

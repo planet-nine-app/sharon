@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Purchase Test Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .status {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .status .badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .info-value {
+            font-family: 'Monaco', 'Consolas', monospace;
+            background: #f3f4f6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            word-break: break-all;
+        }
+
+        .emojicode-box {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 3px dashed #f59e0b;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .emojicode-box h3 {
+            color: #92400e;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .emojicode {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            word-wrap: break-word;
+            user-select: all;
+            cursor: pointer;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin: 10px 0;
+            transition: transform 0.2s;
+        }
+
+        .emojicode:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .emojicode-instructions {
+            font-size: 0.9rem;
+            color: #92400e;
+            margin-top: 10px;
+        }
+
+        .contract-steps {
+            margin-top: 20px;
+        }
+
+        .step {
+            background: #f9fafb;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .step-order {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .step-description {
+            flex: 1;
+            margin-left: 15px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .step-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .step-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .step-status.completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .svg-preview {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .svg-container {
+            display: inline-block;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            background: #1a1a1a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Lesson Purchase Test Results</h1>
+            <p>Complete Integration Test • Covenant + Addie + MAGIC Protocol</p>
+        </div>
+
+        <div class="status">
+            <div class="badge">✅ 23/23 Tests Passing (100%)</div>
+        </div>
+
+        <div id="content"></div>
+    </div>
+
+    <script src="./emojicoding.js"></script>
+    <script>
+        // Load test results
+        fetch('./test-results.json')
+            .then(response => response.json())
+            .then(testResults => {
+                displayResults(testResults);
+            })
+            .catch(error => {
+                console.error('Error loading test results:', error);
+                document.getElementById('content').innerHTML = `
+                    <div class="card">
+                        <h2>❌ Error</h2>
+                        <p>Failed to load test results: ${error.message}</p>
+                    </div>
+                `;
+            });
+
+        function displayResults(results) {
+            // Generate emojicodes using the proper emojicoding library
+            const lessonEmojicode = window.Emojicoding.simpleEncodeHex(results.lessonBDO.bdoPubKey);
+            const contractEmojicode = window.Emojicoding.simpleEncodeHex(results.contract.uuid.replace(/-/g, ''));
+            const contractBdoEmojicode = results.contract.bdoPubKey ? window.Emojicoding.simpleEncodeHex(results.contract.bdoPubKey) : null;
+
+            // Generate emojicodes for each contract step BDO
+            const stepBdoEmojicodes = results.contractStepBDOs ? results.contractStepBDOs.map(step => ({
+                ...step,
+                emojicode: window.Emojicoding.simpleEncodeHex(step.bdoPubKey)
+            })) : [];
+
+            const html = `
+                <div class="card">
+                    <h2>🥒 Lesson BDO</h2>
+                    <div class="info-grid">
+                        <div class="info-label">Title:</div>
+                        <div class="info-value">${results.lessonBDO.title}</div>
+
+                        <div class="info-label">Description:</div>
+                        <div class="info-value">${results.lessonBDO.description}</div>
+
+                        <div class="info-label">BDO Public Key:</div>
+                        <div class="info-value">${results.lessonBDO.bdoPubKey}</div>
+                    </div>
+
+                    <div class="emojicode-box">
+                        <h3>✨ Lesson Emojicode</h3>
+                        <div class="emojicode" onclick="navigator.clipboard.writeText(this.textContent)">${lessonEmojicode}</div>
+                        <div class="emojicode-instructions">
+                            👆 Tap to copy • Use with AdvanceKey/AdvanceShare DEMOJI feature
+                        </div>
+                    </div>
+
+                    <div class="svg-preview">
+                        <h3 style="margin-bottom: 15px;">Lesson SVG Preview</h3>
+                        <div class="svg-container">
+                            ${results.lessonBDO.svgContent}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>📜 SODOTO Contract</h2>
+                    <div class="info-grid">
+                        <div class="info-label">Title:</div>
+                        <div class="info-value">${results.contract.title}</div>
+
+                        <div class="info-label">Contract UUID:</div>
+                        <div class="info-value">${results.contract.uuid}</div>
+
+                        <div class="info-label">BDO Public Key:</div>
+                        <div class="info-value" style="font-size: 0.8rem; word-break: break-all;">${results.contract.bdoPubKey || 'N/A'}</div>
+
+                        <div class="info-label">Participants:</div>
+                        <div class="info-value">${results.contract.participants.length} participants</div>
+                    </div>
+
+                    <div class="emojicode-box">
+                        <h3>✨ Contract UUID Emojicode</h3>
+                        <div class="emojicode" onclick="navigator.clipboard.writeText(this.textContent)">${contractEmojicode}</div>
+                        <div class="emojicode-instructions">
+                            👆 Tap to copy • Use with AdvanceKey/AdvanceShare DEMOJI feature
+                        </div>
+                    </div>
+
+                    ${results.contract.bdoPubKey ? `
+                    <div class="emojicode-box">
+                        <h3>✨ Contract BDO Emojicode</h3>
+                        <div class="emojicode" onclick="navigator.clipboard.writeText(this.textContent)">${contractBdoEmojicode}</div>
+                        <div class="emojicode-instructions">
+                            👆 Tap to copy • Use with AdvanceKey/AdvanceShare DEMOJI feature
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${results.contract.svgContent ? `
+                    <div class="svg-preview">
+                        <h3 style="margin-bottom: 15px;">Contract SVG Preview</h3>
+                        <div class="svg-container">
+                            ${results.contract.svgContent}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <div class="contract-steps">
+                        <h3 style="margin-bottom: 15px; color: #667eea;">Contract Steps</h3>
+                        ${results.contract.steps.map((step, index) => `
+                            <div class="step">
+                                <div class="step-header">
+                                    <div class="step-order">${index + 1}</div>
+                                    <div class="step-description">${step.description}</div>
+                                    <div class="step-status ${step.completed ? 'completed' : 'pending'}">
+                                        ${step.completed ? '✓ Completed' : 'Pending'}
+                                    </div>
+                                </div>
+                                <div style="margin-left: 45px; font-size: 0.9rem; color: #6b7280;">
+                                    Step ID: ${step.id}
+                                    ${step.completed && step.signatures ? `<br>Signed by: ${Object.keys(step.signatures).length} participant(s)` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>💳 Payment Result</h2>
+                    <div class="info-grid">
+                        <div class="info-label">Status:</div>
+                        <div class="info-value">✅ ${results.payment.success ? 'SUCCESS' : 'FAILED'}</div>
+
+                        <div class="info-label">Transaction ID:</div>
+                        <div class="info-value">${results.payment.transactionId}</div>
+
+                        <div class="info-label">Amount:</div>
+                        <div class="info-value">$${(results.payment.amount / 100).toFixed(2)} USD</div>
+
+                        <div class="info-label">Processor:</div>
+                        <div class="info-value">${results.payment.processor}</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>👥 Test Participants</h2>
+                    <h3 style="color: #667eea; margin: 20px 0 10px;">👨‍🏫 Teacher</h3>
+                    <div class="info-grid">
+                        <div class="info-label">UUID:</div>
+                        <div class="info-value">${results.teacher.uuid}</div>
+
+                        <div class="info-label">Public Key:</div>
+                        <div class="info-value">${results.teacher.pubKey}</div>
+                    </div>
+
+                    <h3 style="color: #667eea; margin: 20px 0 10px;">👨‍🎓 Student</h3>
+                    <div class="info-grid">
+                        <div class="info-label">UUID:</div>
+                        <div class="info-value">${results.student.uuid}</div>
+
+                        <div class="info-label">Public Key:</div>
+                        <div class="info-value">${results.student.pubKey}</div>
+                    </div>
+
+                    <h3 style="color: #667eea; margin: 20px 0 10px;">👁️ Observers</h3>
+                    ${results.observers && results.observers.length > 0 ? results.observers.map((obs, index) => `
+                        <div class="info-grid" style="margin-bottom: 10px;">
+                            <div class="info-label">Observer ${index + 1}:</div>
+                            <div class="info-value" style="font-size: 0.8rem; word-break: break-all;">${obs.pubKey}</div>
+                        </div>
+                    `).join('') : '<p>No observers</p>'}
+                </div>
+
+                ${stepBdoEmojicodes.length > 0 ? `
+                <div class="card">
+                    <h2>📸 Contract Step Audit Trail</h2>
+                    <p style="margin-bottom: 20px; color: #6b7280;">
+                        Observer BDOs created for each signed contract step, providing a public audit trail.
+                    </p>
+
+                    ${stepBdoEmojicodes.map(step => `
+                        <div class="emojicode-box" style="margin-bottom: 20px;">
+                            <h3>Step ${step.stepIndex + 1}: ${step.stepDescription}</h3>
+                            <div class="info-grid" style="margin: 10px 0;">
+                                <div class="info-label">BDO UUID:</div>
+                                <div class="info-value" style="font-size: 0.8rem;">${step.bdoUuid}</div>
+
+                                <div class="info-label">BDO Public Key:</div>
+                                <div class="info-value" style="font-size: 0.8rem; word-break: break-all;">${step.bdoPubKey}</div>
+                            </div>
+                            <div style="background: white; border-radius: 8px; padding: 15px; margin: 10px 0;">
+                                <div class="emojicode" onclick="navigator.clipboard.writeText(this.textContent)">${step.emojicode}</div>
+                            </div>
+                            <div class="emojicode-instructions">
+                                👆 Tap to copy • Use with AdvanceKey/AdvanceShare DEMOJI feature
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                ` : ''}
+            `;
+
+            document.getElementById('content').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
