@@ -588,27 +588,29 @@ describe('Lesson Purchase Flow', () => {
         requiredNineum: requiredNineum
       };
 
-      // Use bdo-js SDK to create BDO
+      // Use bdo-js SDK to create BDO with the lesson's own keys
       const bdoSaveKeys = async (k) => bdoKeys;
       const bdoGetKeys = async () => bdoKeys;
 
       const bdoUuid = await bdo.createUser(
-        teacher.user.uuid,
+        lessonId,
         lessonContent,
         bdoSaveKeys,
         bdoGetKeys
       );
 
+      await bdo.updateBDO(bdoUuid, lessonId, lessonContent, true);
+
       bdoUuid.should.be.a('string');
 
       lessonBDO = {
-        bdoPubKey: bdoKeysGenerated.pubKey,
+        bdoPubKey: bdoKeys.pubKey,
         bdoUuid: bdoUuid,
         ...lessonContent
       };
 
       console.log(`✅ Lesson BDO created: ${bdoUuid}`);
-      console.log(`✅ Lesson BDO public key: ${bdoKeysGenerated.pubKey}`);
+      console.log(`✅ Lesson BDO public key: ${bdoKeys.pubKey}`);
     });
   });
 
@@ -672,6 +674,84 @@ describe('Lesson Purchase Flow', () => {
 
       console.log(`✅ Payment processed and contract signed via MAGIC spell: ${payment.transactionId}`);
     });
+
+    it('teacher acknowledges payment (step 1 - second signature)', async () => {
+      try {
+        const timestamp = new Date().getTime() + '';
+        const stepId = purchaseContract.steps[0].id;
+        const messageToSign = timestamp + teacher.user.uuid + purchaseContract.uuid;
+        const signature = await signWithKey(messageToSign, teacher.keys);
+        const stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
+        const stepSignature = await signWithKey(stepMessage, teacher.keys);
+
+        await covenant.signStep(purchaseContract.uuid, stepId, {
+          signature,
+          timestamp,
+          userUUID: teacher.user.uuid,
+          pubKey: teacher.keys.pubKey,
+          stepId: stepId,
+          stepSignature: stepSignature
+        });
+
+        console.log(`✅ Teacher acknowledged payment (signature 2/2) - Step 1 complete!`);
+
+        // Create unique observer for step 1 (payment completed)
+        const observer0 = {
+          keys: {},
+          user: {},
+          keysToReturn: {},
+          error: null
+        };
+
+        observer0.keys = await sessionless.generateKeys(
+          (k) => { observer0.keysToReturn = k; },
+          () => observer0.keysToReturn
+        );
+
+        observers.push(observer0);
+        console.log(`🔑 Observer0 keys generated: ${observer0.keys.pubKey}`);
+
+        // Get the contract's BDO and save it with the observer's keys
+        try {
+          const bdoSaveKeys = async (k) => observer0.keysToReturn;
+          const bdoGetKeys = async () => observer0.keysToReturn;
+
+          observer0.user = await bdo.createUser(
+            `${purchaseContract.uuid}-step-0`,
+            {},
+            bdoSaveKeys,
+            bdoGetKeys
+          );
+
+          const contractBDO = await bdo.getBDO(observer0.user, `${purchaseContract.uuid}-step-0`, purchaseContract.pubKey);
+
+          const observerBDO = contractBDO.bdo;
+
+          await bdo.updateBDO(observer0.user, `${purchaseContract.uuid}-step-0`, observerBDO, true);
+
+          // Create observer as BDO user with the contract snapshot
+          contractStepBDOs.push({
+            stepIndex: 0,
+            stepDescription: purchaseContract.steps[0].description,
+            bdoPubKey: observer0.keys.pubKey,
+            bdoUuid: `${purchaseContract.uuid}-step-0`
+          });
+
+          console.log(`✅ Observer BDO created for step 0: ${observer0.keys.pubKey}`);
+        } catch (error) {
+          observer0.error = error.message;
+          contractStepBDOs.push({
+            stepIndex: 0,
+            stepDescription: purchaseContract.steps[0].description,
+            error: error.message,
+            bdoUuid: `${purchaseContract.uuid}-step-0`
+          });
+          console.log(`⚠️ Observer BDO creation failed: ${error.message}`);
+        }
+      } catch (error) {
+        console.log(`⚠️ Teacher payment acknowledgment failed: ${error.message}`);
+      }
+    });
   });
 
   // ============================================================================
@@ -729,14 +809,15 @@ describe('Lesson Purchase Flow', () => {
   describe('Step 5: Progress Through Contract Steps', () => {
     it('teacher grants lesson access (step 2)', async () => {
       try {
-        const timestamp = new Date().getTime() + '';
+        // Teacher signs first
+        let timestamp = new Date().getTime() + '';
         const stepId = purchaseContract.steps[1].id;
-        const messageToSign = timestamp + teacher.user.uuid + purchaseContract.uuid;
-        const signature = await signWithKey(messageToSign, teacher.keys);
-        const stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
-        const stepSignature = await signWithKey(stepMessage, teacher.keys);
+        let messageToSign = timestamp + teacher.user.uuid + purchaseContract.uuid;
+        let signature = await signWithKey(messageToSign, teacher.keys);
+        let stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
+        let stepSignature = await signWithKey(stepMessage, teacher.keys);
 
-        const result = await covenant.signStep(purchaseContract.uuid, stepId, {
+        await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
           timestamp,
           userUUID: teacher.user.uuid,
@@ -745,67 +826,14 @@ describe('Lesson Purchase Flow', () => {
           stepSignature: stepSignature
         });
 
-        console.log(`✅ Teacher granted lesson access`);
+        console.log(`✅ Teacher granted lesson access (signature 1/2)`);
 
-        // Create unique observer for this step
-        const observer1 = {
-          keys: {},
-          user: {},
-          keysToReturn: {}
-        };
-
-        observer1.keys = await sessionless.generateKeys(
-          (k) => { observer1.keysToReturn = k; },
-          () => observer1.keysToReturn
-        );
-
-        observer1.user = await fount.createUser(
-          observer1.keys.pubKey,
-          (k) => observer1.keysToReturn,
-          () => observer1.keysToReturn
-        );
-
-        observers.push(observer1);
-        console.log(`🔑 Observer1 created: ${observer1.keys.pubKey}`);
-
-        // Get the contract's BDO and save it with the observer's keys
-        try {
-          const contractBDO = await bdo.getBDO(purchaseContract.pubKey);
-
-          const bdoSaveKeys = async (k) => observer1.keysToReturn;
-          const bdoGetKeys = async () => observer1.keysToReturn;
-
-          await bdo.createUser(
-            `${purchaseContract.uuid}-step-1`,
-            contractBDO.bdo,
-            bdoSaveKeys,
-            bdoGetKeys
-          );
-
-          contractStepBDOs.push({
-            stepIndex: 1,
-            stepDescription: purchaseContract.steps[1].description,
-            bdoPubKey: observer1.keys.pubKey,
-            bdoUuid: `${purchaseContract.uuid}-step-1`
-          });
-
-          console.log(`✅ Observer BDO created for step 1: ${observer1.keys.pubKey}`);
-        } catch (error) {
-          console.log(`⚠️ Observer BDO creation simulated: ${error.message}`);
-        }
-      } catch (error) {
-        console.log(`⚠️ Covenant signing simulated: ${error.message}`);
-      }
-    });
-
-    it('student completes lesson (step 3)', async () => {
-      try {
-        const timestamp = new Date().getTime() + '';
-        const stepId = purchaseContract.steps[2].id;
-        const messageToSign = timestamp + student.user.uuid + purchaseContract.uuid;
-        const signature = await signWithKey(messageToSign, student.keys);
-        const stepMessage = timestamp + student.user.uuid + purchaseContract.uuid + stepId;
-        const stepSignature = await signWithKey(stepMessage, student.keys);
+        // Student signs second
+        timestamp = new Date().getTime() + '';
+        messageToSign = timestamp + student.user.uuid + purchaseContract.uuid;
+        signature = await signWithKey(messageToSign, student.keys);
+        stepMessage = timestamp + student.user.uuid + purchaseContract.uuid + stepId;
+        stepSignature = await signWithKey(stepMessage, student.keys);
 
         await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
@@ -816,67 +844,93 @@ describe('Lesson Purchase Flow', () => {
           stepSignature: stepSignature
         });
 
-        console.log(`✅ Student completed lesson`);
+        console.log(`✅ Student acknowledged lesson access (signature 2/2) - Step complete!`);
 
         // Create unique observer for this step
-        const observer2 = {
+        const observer1 = {
           keys: {},
           user: {},
-          keysToReturn: {}
+          keysToReturn: {},
+          error: null
         };
 
-        observer2.keys = await sessionless.generateKeys(
-          (k) => { observer2.keysToReturn = k; },
-          () => observer2.keysToReturn
+        observer1.keys = await sessionless.generateKeys(
+          (k) => { observer1.keysToReturn = k; },
+          () => observer1.keysToReturn
         );
 
-        observer2.user = await fount.createUser(
-          observer2.keys.pubKey,
-          (k) => observer2.keysToReturn,
-          () => observer2.keysToReturn
-        );
-
-        observers.push(observer2);
-        console.log(`🔑 Observer2 created: ${observer2.keys.pubKey}`);
+        observers.push(observer1);
+        console.log(`🔑 Observer1 keys generated: ${observer1.keys.pubKey}`);
 
         // Get the contract's BDO and save it with the observer's keys
         try {
-          const contractBDO = await bdo.getBDO(purchaseContract.pubKey);
+          const bdoSaveKeys = async (k) => observer1.keysToReturn;
+          const bdoGetKeys = async () => observer1.keysToReturn;
 
-          const bdoSaveKeys = async (k) => observer2.keysToReturn;
-          const bdoGetKeys = async () => observer2.keysToReturn;
-
-          await bdo.createUser(
-            `${purchaseContract.uuid}-step-2`,
-            contractBDO.bdo,
+          observer1.user = await bdo.createUser(
+            `${purchaseContract.uuid}-step-1`,
+            {},
             bdoSaveKeys,
             bdoGetKeys
           );
 
+          const contractBDO = await bdo.getBDO(observer1.user, `${purchaseContract.uuid}-step-1`, purchaseContract.pubKey);
+
+          const observerBDO = contractBDO.bdo;
+
+          await bdo.updateBDO(observer1.user, `${purchaseContract.uuid}-step-1`, observerBDO, true);
+
+          // Create observer as BDO user with the contract snapshot
           contractStepBDOs.push({
-            stepIndex: 2,
-            stepDescription: purchaseContract.steps[2].description,
-            bdoPubKey: observer2.keys.pubKey,
-            bdoUuid: `${purchaseContract.uuid}-step-2`
+            stepIndex: 1,
+            stepDescription: purchaseContract.steps[1].description,
+            bdoPubKey: observer1.keys.pubKey,
+            bdoUuid: `${purchaseContract.uuid}-step-1`
           });
 
-          console.log(`✅ Observer BDO created for step 2: ${observer2.keys.pubKey}`);
+          console.log(`✅ Observer BDO created for step 1: ${observer1.keys.pubKey}`);
         } catch (error) {
-          console.log(`⚠️ Observer BDO creation simulated: ${error.message}`);
+          observer1.error = error.message;
+          contractStepBDOs.push({
+            stepIndex: 1,
+            stepDescription: purchaseContract.steps[1].description,
+            error: error.message,
+            bdoUuid: `${purchaseContract.uuid}-step-1`
+          });
+          console.log(`⚠️ Observer BDO creation failed: ${error.message}`);
         }
       } catch (error) {
         console.log(`⚠️ Covenant signing simulated: ${error.message}`);
       }
     });
 
-    it('teacher verifies completion (step 4)', async () => {
+    it('student completes lesson (step 3)', async () => {
       try {
-        const timestamp = new Date().getTime() + '';
-        const stepId = purchaseContract.steps[3].id;
-        const messageToSign = timestamp + teacher.user.uuid + purchaseContract.uuid;
-        const signature = await signWithKey(messageToSign, teacher.keys);
-        const stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
-        const stepSignature = await signWithKey(stepMessage, teacher.keys);
+        // Student signs first
+        let timestamp = new Date().getTime() + '';
+        const stepId = purchaseContract.steps[2].id;
+        let messageToSign = timestamp + student.user.uuid + purchaseContract.uuid;
+        let signature = await signWithKey(messageToSign, student.keys);
+        let stepMessage = timestamp + student.user.uuid + purchaseContract.uuid + stepId;
+        let stepSignature = await signWithKey(stepMessage, student.keys);
+
+        await covenant.signStep(purchaseContract.uuid, stepId, {
+          signature,
+          timestamp,
+          userUUID: student.user.uuid,
+          pubKey: student.keys.pubKey,
+          stepId: stepId,
+          stepSignature: stepSignature
+        });
+
+        console.log(`✅ Student completed lesson (signature 1/2)`);
+
+        // Teacher signs second
+        timestamp = new Date().getTime() + '';
+        messageToSign = timestamp + teacher.user.uuid + purchaseContract.uuid;
+        signature = await signWithKey(messageToSign, teacher.keys);
+        stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
+        stepSignature = await signWithKey(stepMessage, teacher.keys);
 
         await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
@@ -887,13 +941,111 @@ describe('Lesson Purchase Flow', () => {
           stepSignature: stepSignature
         });
 
-        console.log(`✅ Teacher verified completion`);
+        console.log(`✅ Teacher acknowledged lesson completion (signature 2/2) - Step complete!`);
+
+        // Create unique observer for this step
+        const observer2 = {
+          keys: {},
+          user: {},
+          keysToReturn: {},
+          error: null
+        };
+
+        observer2.keys = await sessionless.generateKeys(
+          (k) => { observer2.keysToReturn = k; },
+          () => observer2.keysToReturn
+        );
+
+        observers.push(observer2);
+        console.log(`🔑 Observer2 keys generated: ${observer2.keys.pubKey}`);
+
+        // Get the contract's BDO and save it with the observer's keys
+        try {
+          const bdoSaveKeys = async (k) => observer2.keysToReturn;
+          const bdoGetKeys = async () => observer2.keysToReturn;
+
+          observer2.user = await bdo.createUser(
+            `${purchaseContract.uuid}-step-2`,
+            {},
+            bdoSaveKeys,
+            bdoGetKeys
+          );
+
+          const contractBDO = await bdo.getBDO(observer2.user, `${purchaseContract.uuid}-step-2`, purchaseContract.pubKey);
+
+          const observerBDO = contractBDO.bdo;
+
+          await bdo.updateBDO(observer2.user, `${purchaseContract.uuid}-step-2`, observerBDO, true);
+
+          // Create observer as BDO user with the contract snapshot
+          contractStepBDOs.push({
+            stepIndex: 2,
+            stepDescription: purchaseContract.steps[2].description,
+            bdoPubKey: observer2.keys.pubKey,
+            bdoUuid: `${purchaseContract.uuid}-step-2`
+          });
+
+          console.log(`✅ Observer BDO created for step 2: ${observer2.keys.pubKey}`);
+        } catch (error) {
+          observer2.error = error.message;
+          contractStepBDOs.push({
+            stepIndex: 2,
+            stepDescription: purchaseContract.steps[2].description,
+            error: error.message,
+            bdoUuid: `${purchaseContract.uuid}-step-2`
+          });
+          console.log(`⚠️ Observer BDO creation failed: ${error.message}`);
+        }
+      } catch (error) {
+        console.log(`⚠️ Covenant signing simulated: ${error.message}`);
+      }
+    });
+
+    it('teacher verifies completion (step 4)', async () => {
+      try {
+        // Teacher signs first
+        let timestamp = new Date().getTime() + '';
+        const stepId = purchaseContract.steps[3].id;
+        let messageToSign = timestamp + teacher.user.uuid + purchaseContract.uuid;
+        let signature = await signWithKey(messageToSign, teacher.keys);
+        let stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
+        let stepSignature = await signWithKey(stepMessage, teacher.keys);
+
+        await covenant.signStep(purchaseContract.uuid, stepId, {
+          signature,
+          timestamp,
+          userUUID: teacher.user.uuid,
+          pubKey: teacher.keys.pubKey,
+          stepId: stepId,
+          stepSignature: stepSignature
+        });
+
+        console.log(`✅ Teacher verified completion (signature 1/2)`);
+
+        // Student signs second
+        timestamp = new Date().getTime() + '';
+        messageToSign = timestamp + student.user.uuid + purchaseContract.uuid;
+        signature = await signWithKey(messageToSign, student.keys);
+        stepMessage = timestamp + student.user.uuid + purchaseContract.uuid + stepId;
+        stepSignature = await signWithKey(stepMessage, student.keys);
+
+        await covenant.signStep(purchaseContract.uuid, stepId, {
+          signature,
+          timestamp,
+          userUUID: student.user.uuid,
+          pubKey: student.keys.pubKey,
+          stepId: stepId,
+          stepSignature: stepSignature
+        });
+
+        console.log(`✅ Student acknowledged verification (signature 2/2) - Step complete!`);
 
         // Create unique observer for this step
         const observer3 = {
           keys: {},
           user: {},
-          keysToReturn: {}
+          keysToReturn: {},
+          error: null
         };
 
         observer3.keys = await sessionless.generateKeys(
@@ -901,29 +1053,28 @@ describe('Lesson Purchase Flow', () => {
           () => observer3.keysToReturn
         );
 
-        observer3.user = await fount.createUser(
-          observer3.keys.pubKey,
-          (k) => observer3.keysToReturn,
-          () => observer3.keysToReturn
-        );
-
         observers.push(observer3);
-        console.log(`🔑 Observer3 created: ${observer3.keys.pubKey}`);
+        console.log(`🔑 Observer3 keys generated: ${observer3.keys.pubKey}`);
 
         // Get the contract's BDO and save it with the observer's keys
         try {
-          const contractBDO = await bdo.getBDO(purchaseContract.pubKey);
-
           const bdoSaveKeys = async (k) => observer3.keysToReturn;
           const bdoGetKeys = async () => observer3.keysToReturn;
 
-          await bdo.createUser(
+          observer3.user = await bdo.createUser(
             `${purchaseContract.uuid}-step-3`,
-            contractBDO.bdo,
+            {},
             bdoSaveKeys,
             bdoGetKeys
           );
 
+          const contractBDO = await bdo.getBDO(observer3.user, `${purchaseContract.uuid}-step-3`, purchaseContract.pubKey);
+
+          const observerBDO = contractBDO.bdo;
+
+          await bdo.updateBDO(observer3.user, `${purchaseContract.uuid}-step-3`, observerBDO, true);
+
+          // Create observer as BDO user with the contract snapshot
           contractStepBDOs.push({
             stepIndex: 3,
             stepDescription: purchaseContract.steps[3].description,
@@ -933,7 +1084,14 @@ describe('Lesson Purchase Flow', () => {
 
           console.log(`✅ Observer BDO created for step 3: ${observer3.keys.pubKey}`);
         } catch (error) {
-          console.log(`⚠️ Observer BDO creation simulated: ${error.message}`);
+          observer3.error = error.message;
+          contractStepBDOs.push({
+            stepIndex: 3,
+            stepDescription: purchaseContract.steps[3].description,
+            error: error.message,
+            bdoUuid: `${purchaseContract.uuid}-step-3`
+          });
+          console.log(`⚠️ Observer BDO creation failed: ${error.message}`);
         }
       } catch (error) {
         console.log(`⚠️ Covenant signing simulated: ${error.message}`);
@@ -962,12 +1120,13 @@ describe('Lesson Purchase Flow', () => {
 
       // Also sign the contract step
       try {
-        const timestamp = new Date().getTime() + '';
+        // Teacher signs first
+        let timestamp = new Date().getTime() + '';
         const stepId = purchaseContract.steps[4].id;
-        const messageToSign = timestamp + teacher.user.uuid + purchaseContract.uuid;
-        const signature = await signWithKey(messageToSign, teacher.keys);
-        const stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
-        const stepSignature = await signWithKey(stepMessage, teacher.keys);
+        let messageToSign = timestamp + teacher.user.uuid + purchaseContract.uuid;
+        let signature = await signWithKey(messageToSign, teacher.keys);
+        let stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
+        let stepSignature = await signWithKey(stepMessage, teacher.keys);
 
         await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
@@ -978,13 +1137,32 @@ describe('Lesson Purchase Flow', () => {
           stepSignature: stepSignature
         });
 
-        console.log(`✅ Nineum grant step signed`);
+        console.log(`✅ Nineum grant step signed by teacher (signature 1/2)`);
+
+        // Student signs second
+        timestamp = new Date().getTime() + '';
+        messageToSign = timestamp + student.user.uuid + purchaseContract.uuid;
+        signature = await signWithKey(messageToSign, student.keys);
+        stepMessage = timestamp + student.user.uuid + purchaseContract.uuid + stepId;
+        stepSignature = await signWithKey(stepMessage, student.keys);
+
+        await covenant.signStep(purchaseContract.uuid, stepId, {
+          signature,
+          timestamp,
+          userUUID: student.user.uuid,
+          pubKey: student.keys.pubKey,
+          stepId: stepId,
+          stepSignature: stepSignature
+        });
+
+        console.log(`✅ Student acknowledged nineum grant (signature 2/2) - Step complete!`);
 
         // Create unique observer for this step
         const observer4 = {
           keys: {},
           user: {},
-          keysToReturn: {}
+          keysToReturn: {},
+          error: null
         };
 
         observer4.keys = await sessionless.generateKeys(
@@ -992,29 +1170,28 @@ describe('Lesson Purchase Flow', () => {
           () => observer4.keysToReturn
         );
 
-        observer4.user = await fount.createUser(
-          observer4.keys.pubKey,
-          (k) => observer4.keysToReturn,
-          () => observer4.keysToReturn
-        );
-
         observers.push(observer4);
-        console.log(`🔑 Observer4 created: ${observer4.keys.pubKey}`);
+        console.log(`🔑 Observer4 keys generated: ${observer4.keys.pubKey}`);
 
         // Get the contract's BDO and save it with the observer's keys
         try {
-          const contractBDO = await bdo.getBDO(purchaseContract.pubKey);
-
           const bdoSaveKeys = async (k) => observer4.keysToReturn;
           const bdoGetKeys = async () => observer4.keysToReturn;
 
-          await bdo.createUser(
+          observer4.user = await bdo.createUser(
             `${purchaseContract.uuid}-step-4`,
-            contractBDO.bdo,
+            {},
             bdoSaveKeys,
             bdoGetKeys
           );
 
+          const contractBDO = await bdo.getBDO(observer4.user, `${purchaseContract.uuid}-step-4`, purchaseContract.pubKey);
+
+          const observerBDO = contractBDO.bdo;
+
+          await bdo.updateBDO(observer4.user, `${purchaseContract.uuid}-step-4`, observerBDO, true);
+
+          // Create observer as BDO user with the contract snapshot
           contractStepBDOs.push({
             stepIndex: 4,
             stepDescription: purchaseContract.steps[4].description,
@@ -1024,7 +1201,14 @@ describe('Lesson Purchase Flow', () => {
 
           console.log(`✅ Observer BDO created for step 4: ${observer4.keys.pubKey}`);
         } catch (error) {
-          console.log(`⚠️ Observer BDO creation simulated: ${error.message}`);
+          observer4.error = error.message;
+          contractStepBDOs.push({
+            stepIndex: 4,
+            stepDescription: purchaseContract.steps[4].description,
+            error: error.message,
+            bdoUuid: `${purchaseContract.uuid}-step-4`
+          });
+          console.log(`⚠️ Observer BDO creation failed: ${error.message}`);
         }
       } catch (error) {
         console.log(`⚠️ Step signing simulated: ${error.message}`);
