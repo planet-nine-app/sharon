@@ -1,103 +1,103 @@
 {
   "teacher": {
-    "uuid": "965e6418-489f-4ba2-8ab1-bf7aa904750a",
-    "pubKey": "0385171873beca3194308afc5691693fc651abd62ffe536b851c5d2429e9e01145"
+    "uuid": "4e80a8f9-a94c-4aa4-bbf1-657e0e92457f",
+    "pubKey": "0337d230742f850c31f9486894885b33d80107c52c3bb178f89b09a4b27a8a1cb2"
   },
   "student": {
-    "uuid": "9bdd0aed-d2ee-4c4a-89d9-ffc3d13172f1",
-    "pubKey": "024ee08a059bcc609df58136f88338f780aa8c5b3c23934b293addfc23d2a31917"
+    "uuid": "624cf77e-f3d6-4dfb-b7f2-d9cf4e27886d",
+    "pubKey": "03f27ce50963572bc209da5d05a3983bf8cd5cde642b55a586e4660654b1ee2b53"
   },
   "observers": [
     {
-      "pubKey": "027d8bdaf71d8af4848da5c9274d3973988aea4e589a59775be1bfce1e8a745efb"
+      "pubKey": "02cd3a1f10b2af5a77ba07f761e7746c6ea3beb655f1040e28427927851fbb051a"
     },
     {
-      "pubKey": "02cffc61d487bda0db66561a25a6728f430e53eb9e468272ee5892bbf9848a34da"
+      "pubKey": "020aab11ca23fc8653096e84702459d3097e26046035d2ffc242fc2281147736a7"
     },
     {
-      "pubKey": "02035735bb8f1e56f42d015299ab86d1fee929fb784e3262d080261b175c656954"
+      "pubKey": "02105b8c13b6e67375d3783871ea626325ec2e803c35c5e842e0a781cb1f83312c"
     },
     {
-      "pubKey": "02d147224225453fc340e000d1f8a046a5b18f5e9397b2c50a7368fe172873ff08"
+      "pubKey": "03e4a32696e73e8c2be0478e91b5441a1fa4c6fea909ff2fc38a7fca723edaf9d0"
     },
     {
-      "pubKey": "02b3de7da4c7489cc32175493a717fba9b854073c8b1980c2fae54f184145ec588"
+      "pubKey": "02a521561ae5e0df94d723bde13280c8b1a25c158b2cf3cbffbe03c2d754177cdc"
     }
   ],
   "lessonBDO": {
-    "bdoPubKey": "022eb1e8cb05ae12e50ca7df21c198458b6cd6553ccce4939384b2b75596d3efee",
+    "bdoPubKey": "02bf66aa633c7acd124b81e53df62c90d022ea0330a6b310367fdf5566cb96d0f4",
     "title": "Growing Cucumbers: From Seed to Harvest",
     "description": "Learn how to grow delicious cucumbers in your garden, from planting seeds to harvesting",
     "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 300\">\n          <rect width=\"400\" height=\"300\" fill=\"#2d5016\"/>\n          <text x=\"200\" y=\"150\" text-anchor=\"middle\" fill=\"#90EE90\" font-size=\"24\" font-family=\"Arial\">\n            🥒 Growing Cucumbers\n          </text>\n          <text x=\"200\" y=\"180\" text-anchor=\"middle\" fill=\"#98FB98\" font-size=\"14\" font-family=\"Arial\">\n            Complete Garden Guide\n          </text>\n        </svg>"
   },
   "contract": {
-    "uuid": "55240c02-6b76-4a0e-928c-4b1b700a144b",
-    "bdoPubKey": "0300a9947aa05bac6da9473306e231b32e79b952de354f45fd26428f9783a64fed",
+    "uuid": "7f4ebe39-b5c6-472c-8a07-df4e9e91620d",
+    "bdoPubKey": "02dfc1aa900786dc0036f0970fe3b649834d32d030e064ba1ddc02ca613057bd70",
     "title": "Lesson: Growing Cucumbers: From Seed to Harvest",
     "participants": [
-      "0385171873beca3194308afc5691693fc651abd62ffe536b851c5d2429e9e01145",
-      "024ee08a059bcc609df58136f88338f780aa8c5b3c23934b293addfc23d2a31917"
+      "0337d230742f850c31f9486894885b33d80107c52c3bb178f89b09a4b27a8a1cb2",
+      "03f27ce50963572bc209da5d05a3983bf8cd5cde642b55a586e4660654b1ee2b53"
     ],
     "steps": [
       {
-        "id": "5ecc08ea-84ba-4e69-b7fa-5c71bd51c5c5",
+        "id": "b095824b-4865-452c-bcf2-1ae2a2d040c3",
         "description": "Lesson Acquired",
         "magicSpell": null,
         "order": 0,
         "signatures": {
-          "0385171873beca3194308afc5691693fc651abd62ffe536b851c5d2429e9e01145": null,
-          "024ee08a059bcc609df58136f88338f780aa8c5b3c23934b293addfc23d2a31917": null
+          "0337d230742f850c31f9486894885b33d80107c52c3bb178f89b09a4b27a8a1cb2": null,
+          "03f27ce50963572bc209da5d05a3983bf8cd5cde642b55a586e4660654b1ee2b53": null
         },
         "completed": false,
-        "createdAt": "1760237175895"
+        "createdAt": "1760286792672"
       },
       {
-        "id": "2efc8ea1-605d-474f-ba3f-a8997bc24cd1",
+        "id": "674fa4e6-911d-4795-aa71-9bcb8ed8f6b6",
         "description": "See One",
         "magicSpell": null,
         "order": 1,
         "signatures": {
-          "0385171873beca3194308afc5691693fc651abd62ffe536b851c5d2429e9e01145": null,
-          "024ee08a059bcc609df58136f88338f780aa8c5b3c23934b293addfc23d2a31917": null
+          "0337d230742f850c31f9486894885b33d80107c52c3bb178f89b09a4b27a8a1cb2": null,
+          "03f27ce50963572bc209da5d05a3983bf8cd5cde642b55a586e4660654b1ee2b53": null
         },
         "completed": false,
-        "createdAt": "1760237175895"
+        "createdAt": "1760286792672"
       },
       {
-        "id": "47525aaa-9787-4322-bc3c-dad7de10f1d1",
+        "id": "99702bf1-aaf9-4fa0-a9a8-0527c27b1cbe",
         "description": "Do One",
         "magicSpell": null,
         "order": 2,
         "signatures": {
-          "0385171873beca3194308afc5691693fc651abd62ffe536b851c5d2429e9e01145": null,
-          "024ee08a059bcc609df58136f88338f780aa8c5b3c23934b293addfc23d2a31917": null
+          "0337d230742f850c31f9486894885b33d80107c52c3bb178f89b09a4b27a8a1cb2": null,
+          "03f27ce50963572bc209da5d05a3983bf8cd5cde642b55a586e4660654b1ee2b53": null
         },
         "completed": false,
-        "createdAt": "1760237175895"
+        "createdAt": "1760286792672"
       },
       {
-        "id": "30f27ad1-ea61-433f-92c7-b895f1bcff28",
+        "id": "f5d748fc-06d4-4545-9237-8717f2cb0dd5",
         "description": "Teach One",
         "magicSpell": null,
         "order": 3,
         "signatures": {
-          "0385171873beca3194308afc5691693fc651abd62ffe536b851c5d2429e9e01145": null,
-          "024ee08a059bcc609df58136f88338f780aa8c5b3c23934b293addfc23d2a31917": null
+          "0337d230742f850c31f9486894885b33d80107c52c3bb178f89b09a4b27a8a1cb2": null,
+          "03f27ce50963572bc209da5d05a3983bf8cd5cde642b55a586e4660654b1ee2b53": null
         },
         "completed": false,
-        "createdAt": "1760237175895"
+        "createdAt": "1760286792672"
       },
       {
-        "id": "ce8e1fff-c874-4e80-97cc-6a9d3e9eb2f9",
+        "id": "6fdbaaf3-3185-4e39-a559-e8f66c0e2d0a",
         "description": "Grant Nineum Permission",
         "magicSpell": null,
         "order": 4,
         "signatures": {
-          "0385171873beca3194308afc5691693fc651abd62ffe536b851c5d2429e9e01145": null,
-          "024ee08a059bcc609df58136f88338f780aa8c5b3c23934b293addfc23d2a31917": null
+          "0337d230742f850c31f9486894885b33d80107c52c3bb178f89b09a4b27a8a1cb2": null,
+          "03f27ce50963572bc209da5d05a3983bf8cd5cde642b55a586e4660654b1ee2b53": null
         },
         "completed": false,
-        "createdAt": "1760237175895"
+        "createdAt": "1760286792672"
       }
     ],
     "svgContent": null
@@ -106,37 +106,37 @@
     {
       "stepIndex": 0,
       "stepDescription": "Lesson Acquired",
-      "bdoPubKey": "027d8bdaf71d8af4848da5c9274d3973988aea4e589a59775be1bfce1e8a745efb",
-      "bdoUuid": "55240c02-6b76-4a0e-928c-4b1b700a144b-step-0"
+      "bdoPubKey": "02cd3a1f10b2af5a77ba07f761e7746c6ea3beb655f1040e28427927851fbb051a",
+      "bdoUuid": "7f4ebe39-b5c6-472c-8a07-df4e9e91620d-step-0"
     },
     {
       "stepIndex": 1,
       "stepDescription": "See One",
-      "bdoPubKey": "02cffc61d487bda0db66561a25a6728f430e53eb9e468272ee5892bbf9848a34da",
-      "bdoUuid": "55240c02-6b76-4a0e-928c-4b1b700a144b-step-1"
+      "bdoPubKey": "020aab11ca23fc8653096e84702459d3097e26046035d2ffc242fc2281147736a7",
+      "bdoUuid": "7f4ebe39-b5c6-472c-8a07-df4e9e91620d-step-1"
     },
     {
       "stepIndex": 2,
       "stepDescription": "Do One",
-      "bdoPubKey": "02035735bb8f1e56f42d015299ab86d1fee929fb784e3262d080261b175c656954",
-      "bdoUuid": "55240c02-6b76-4a0e-928c-4b1b700a144b-step-2"
+      "bdoPubKey": "02105b8c13b6e67375d3783871ea626325ec2e803c35c5e842e0a781cb1f83312c",
+      "bdoUuid": "7f4ebe39-b5c6-472c-8a07-df4e9e91620d-step-2"
     },
     {
       "stepIndex": 3,
       "stepDescription": "Teach One",
-      "bdoPubKey": "02d147224225453fc340e000d1f8a046a5b18f5e9397b2c50a7368fe172873ff08",
-      "bdoUuid": "55240c02-6b76-4a0e-928c-4b1b700a144b-step-3"
+      "bdoPubKey": "03e4a32696e73e8c2be0478e91b5441a1fa4c6fea909ff2fc38a7fca723edaf9d0",
+      "bdoUuid": "7f4ebe39-b5c6-472c-8a07-df4e9e91620d-step-3"
     },
     {
       "stepIndex": 4,
       "stepDescription": "Grant Nineum Permission",
-      "bdoPubKey": "02b3de7da4c7489cc32175493a717fba9b854073c8b1980c2fae54f184145ec588",
-      "bdoUuid": "55240c02-6b76-4a0e-928c-4b1b700a144b-step-4"
+      "bdoPubKey": "02a521561ae5e0df94d723bde13280c8b1a25c158b2cf3cbffbe03c2d754177cdc",
+      "bdoUuid": "7f4ebe39-b5c6-472c-8a07-df4e9e91620d-step-4"
     }
   ],
   "payment": {
     "success": true,
-    "transactionId": "txn_1760237175921",
+    "transactionId": "txn_1760286792710",
     "amount": 1999,
     "processor": "simulated"
   }

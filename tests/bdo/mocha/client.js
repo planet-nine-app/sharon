@@ -2,6 +2,7 @@ import bdo from 'bdo-js';
 import { should } from 'chai';
 import sessionless from 'sessionless-node';
 import { TEST_USERS } from './test-users.js';
+import fetch from 'node-fetch';
 
 should();
 
@@ -22,6 +23,7 @@ let baseId;
 
 // Use nginx routing
 bdo.baseURL = `http://nginx:80/bdo/`;
+const directBDOURL = 'http://nginx:80/bdo';
 
 // Helper to switch users and setup sessionless
 const switchToUser = async (user) => {
@@ -152,6 +154,79 @@ it('should get bases', async () => {
     throw new Error(`Expected bases response but got: ${JSON.stringify(res)}`);
   }
   keysToReturn = keys;
+});
+
+it('should get emojicode for bob public bdo', async () => {
+  keysToReturn = keys2;
+  await switchToUser(bob);
+
+  console.log('Fetching emojicode for bob pubKey:', keys2.pubKey);
+  const res = await fetch(`${directBDOURL}/pubkey/${keys2.pubKey}/emojicode`);
+  res.status.should.equal(200);
+
+  const data = await res.json();
+  console.log('Bob emojicode:', data);
+
+  data.should.have.property('emojicode');
+  data.should.have.property('pubKey');
+  data.should.have.property('createdAt');
+  data.pubKey.should.equal(keys2.pubKey);
+
+  // Validate it's 8 emoji
+  const emojiArray = [...data.emojicode];
+  emojiArray.length.should.equal(8);
+
+  console.log(`✅ Bob's emojicode: ${data.emojicode}`);
+
+  // Save for next test
+  savedUser2.emojicode = data.emojicode;
+  keysToReturn = keys;
+});
+
+it('should retrieve bob bdo using emojicode query param', async () => {
+  await switchToUser(alice);
+
+  // Alice retrieves Bob's public BDO using emojicode query param
+  const timestamp = Date.now();
+  const message = `${savedUser.uuid}${timestamp}${hash}`;
+  const signature = sessionless.sign(message);
+
+  console.log(`Alice fetching Bob's BDO with emojicode: ${savedUser2.emojicode}`);
+  const url = `${directBDOURL}/user/${savedUser.uuid}/bdo?timestamp=${timestamp}&hash=${hash}&signature=${signature}&emojicode=${encodeURIComponent(savedUser2.emojicode)}`;
+
+  const res = await fetch(url);
+  res.status.should.equal(200);
+
+  const data = await res.json();
+  console.log('Retrieved Bob BDO via emojicode query param:', data);
+
+  data.should.have.property('bdo');
+  data.should.have.property('uuid');
+  data.bdo.baz.should.equal('public');
+
+  console.log('✅ Alice retrieved Bob public BDO using emojicode query param');
+});
+
+it('should retrieve bob bdo directly by emojicode', async () => {
+  await switchToUser(alice);
+
+  console.log(`Fetching Bob BDO with emojicode: ${savedUser2.emojicode}`);
+  const res = await fetch(`${directBDOURL}/emoji/${encodeURIComponent(savedUser2.emojicode)}`);
+  res.status.should.equal(200);
+
+  const data = await res.json();
+  console.log('Retrieved Bob BDO by emojicode:', data);
+
+  data.should.have.property('emojicode');
+  data.should.have.property('pubKey');
+  data.should.have.property('bdo');
+  data.should.have.property('createdAt');
+
+  data.emojicode.should.equal(savedUser2.emojicode);
+  data.pubKey.should.equal(keys2.pubKey);
+  data.bdo.baz.should.equal('public');
+
+  console.log('✅ Successfully retrieved Bob BDO directly by emojicode');
 });
 
 it('should delete a user', async () => {
