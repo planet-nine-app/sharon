@@ -20,6 +20,19 @@
     "test:sessionless": "cd tests/sessionless && npm test",
     "test:magic": "cd tests/magic && npm test",
     "test:teleportation": "cd tests/teleportation && npm test",
+    "test:magic-spells": "node run-magic-spell-tests.js",
+    "test:fount:magic": "mocha tests/fount/mocha/magic-spells.js --timeout 10000",
+    "test:prof:magic": "mocha tests/prof/magic-spells.js --timeout 10000",
+    "test:covenant:magic": "mocha tests/covenant/magic-spells.js --timeout 10000",
+    "test:addie:magic": "mocha tests/addie/magic-spells.js --timeout 10000",
+    "test:sanora:magic": "mocha tests/sanora/magic-spells.js --timeout 10000",
+    "test:dolores:magic": "mocha tests/dolores/magic-spells.js --timeout 10000",
+    "test:julia:magic": "mocha tests/julia/magic-spells.js --timeout 10000",
+    "test:bdo:magic": "mocha tests/bdo/magic-spells.js --timeout 10000",
+    "test:continuebee:magic": "mocha tests/continuebee/magic-spells.js --timeout 10000",
+    "test:aretha:magic": "mocha tests/aretha/magic-spells.js --timeout 10000",
+    "test:pref:magic": "mocha tests/pref/magic-spells.js --timeout 10000",
+    "test:joan:magic": "mocha tests/joan/magic-spells.js --timeout 10000",
     "env:start": "./start-test-environment.sh",
     "launch": "./launch-status-check.sh",
     "env:stop": "docker-compose down",
@@ -33,7 +46,9 @@
   "devDependencies": {
     "mocha": "^10.0.0",
     "chai": "^4.3.0",
-    "node-fetch": "^3.0.0"
+    "node-fetch": "^3.0.0",
+    "sessionless-node": "file:../sessionless/src/javascript/node",
+    "fount-js": "file:../fount/src/client/javascript"
   },
   "engines": {
     "node": ">=18.0.0"
