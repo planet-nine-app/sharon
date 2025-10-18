@@ -41,7 +41,7 @@ describe('Aretha MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('arethaUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('arethaUserCreate result:', result);
 
@@ -73,7 +73,7 @@ describe('Aretha MAGIC Spell Tests', () => {
     const galacticMessage = timestamp + galacticSpell.spell + galacticSpell.casterUUID + galacticSpell.totalCost + galacticSpell.mp + galacticSpell.ordinal;
     galacticSpell.casterSignature = await sessionless.sign(galacticMessage);
 
-    const galacticResult = await fount.castSpell('arethaUserGalaxy', galacticSpell);
+    const galacticResult = await fount.resolve(galacticSpell);
     console.log('arethaUserGalaxy result:', galacticResult);
 
     galacticResult.should.have.property('success', true);
@@ -95,7 +95,7 @@ describe('Aretha MAGIC Spell Tests', () => {
     const grantMessage = grantTimestamp + grantSpell.spell + grantSpell.casterUUID + grantSpell.totalCost + grantSpell.mp + grantSpell.ordinal;
     grantSpell.casterSignature = await sessionless.sign(grantMessage);
 
-    const grantResult = await fount.castSpell('arethaUserGrant', grantSpell);
+    const grantResult = await fount.resolve(grantSpell);
     console.log('arethaUserGrant result:', grantResult);
 
     grantResult.should.have.property('success', true);
@@ -125,7 +125,7 @@ describe('Aretha MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('arethaUserTickets', spell);
+    const result = await fount.resolve(spell);
 
     console.log('arethaUserTickets result:', result);
 
@@ -153,7 +153,7 @@ describe('Aretha MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('arethaUserGalaxy', spell);
+    const result = await fount.resolve(spell);
 
     console.log('arethaUserGalaxy result:', result);
 
@@ -181,7 +181,7 @@ describe('Aretha MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('arethaUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('arethaUserCreate (missing pubKey) result:', result);
 
@@ -213,7 +213,7 @@ describe('Aretha MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('arethaUserTickets', spell);
+    const result = await fount.resolve(spell);
 
     console.log('arethaUserTickets (invalid flavor) result:', result);
 
@@ -241,7 +241,7 @@ describe('Aretha MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('arethaUserGrant', spell);
+    const result = await fount.resolve(spell);
 
     console.log('arethaUserGrant (missing uuid) result:', result);
 
@@ -269,7 +269,7 @@ describe('Aretha MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('arethaUserGalaxy', spell);
+    const result = await fount.resolve(spell);
 
     console.log('arethaUserGalaxy (missing fields) result:', result);
 

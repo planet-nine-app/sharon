@@ -6,6 +6,8 @@
   "scripts": {
     "test": "npm run test:all",
     "test:all": "node run-all-tests.js",
+    "test:local": "NODE_ENV=local USE_DIRECT_PORTS=true node run-all-tests.js",
+    "test:local:magic": "NODE_ENV=local USE_DIRECT_PORTS=true node run-magic-spell-tests.js",
     "test:services": "node run-service-tests.js",
     "test:protocols": "node run-protocol-tests.js",
     "test:system": "node run-system-tests.js",

@@ -41,7 +41,7 @@ describe('Addie MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('addieUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('addieUserCreate result:', result);
 
@@ -75,7 +75,7 @@ describe('Addie MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('addieUserProcessor', spell);
+    const result = await fount.resolve(spell);
 
     console.log('addieUserProcessor result:', result);
 
@@ -105,7 +105,7 @@ describe('Addie MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('addieUserProcessorIntentWithoutSplits', spell);
+    const result = await fount.resolve(spell);
 
     console.log('addieUserProcessorIntentWithoutSplits result:', result);
 
@@ -131,7 +131,7 @@ describe('Addie MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('addieUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -156,7 +156,7 @@ describe('Addie MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('addieUserProcessor', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -181,7 +181,7 @@ describe('Addie MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('addieUserProcessorIntent', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -206,7 +206,7 @@ describe('Addie MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('addieChargeSavedMethod', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -231,7 +231,7 @@ describe('Addie MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('addiePaymentMethodsIntent', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -256,7 +256,7 @@ describe('Addie MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('addieSavedPaymentMethodDelete', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -281,7 +281,7 @@ describe('Addie MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('addieMoneyProcessor', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');

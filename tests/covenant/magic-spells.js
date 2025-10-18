@@ -42,7 +42,7 @@ describe('Covenant MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('covenantUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('covenantUserCreate result:', result);
 
@@ -81,7 +81,7 @@ describe('Covenant MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('covenantContract', spell);
+    const result = await fount.resolve(spell);
 
     console.log('covenantContract result:', result);
 
@@ -116,7 +116,7 @@ describe('Covenant MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('covenantContractUpdate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('covenantContractUpdate result:', result);
 
@@ -152,7 +152,7 @@ describe('Covenant MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('covenantContractSign', spell);
+    const result = await fount.resolve(spell);
 
     console.log('covenantContractSign result:', result);
 
@@ -181,7 +181,7 @@ describe('Covenant MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('covenantContractDelete', spell);
+    const result = await fount.resolve(spell);
 
     console.log('covenantContractDelete result:', result);
 
@@ -207,7 +207,7 @@ describe('Covenant MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('covenantUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -232,7 +232,7 @@ describe('Covenant MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('covenantContract', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -258,7 +258,7 @@ describe('Covenant MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('covenantContractUpdate', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -286,7 +286,7 @@ describe('Covenant MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('covenantContractSign', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -312,7 +312,7 @@ describe('Covenant MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('covenantContractDelete', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');

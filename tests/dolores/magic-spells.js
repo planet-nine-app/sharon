@@ -42,7 +42,7 @@ describe('Dolores MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('doloresUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('doloresUserCreate result:', result);
 
@@ -78,7 +78,7 @@ describe('Dolores MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('doloresUserPost', spell);
+    const result = await fount.resolve(spell);
 
     console.log('doloresUserPost result:', result);
 
@@ -109,7 +109,7 @@ describe('Dolores MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('doloresUserShortFormVideo', spell);
+    const result = await fount.resolve(spell);
 
     console.log('doloresUserShortFormVideo result:', result);
 
@@ -139,7 +139,7 @@ describe('Dolores MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('doloresUserVideoTags', spell);
+    const result = await fount.resolve(spell);
 
     console.log('doloresUserVideoTags result:', result);
 
@@ -164,7 +164,7 @@ describe('Dolores MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('doloresUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -189,7 +189,7 @@ describe('Dolores MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('doloresUserPost', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -214,7 +214,7 @@ describe('Dolores MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('doloresAdminFeeds', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -239,7 +239,7 @@ describe('Dolores MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('doloresUserShortFormVideo', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -264,7 +264,7 @@ describe('Dolores MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('doloresUserVideoTags', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -289,7 +289,7 @@ describe('Dolores MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('doloresAdminInstagramCredentials', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');

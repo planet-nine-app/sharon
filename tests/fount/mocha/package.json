@@ -10,7 +10,7 @@
   "description": "",
   "type": "module",
   "dependencies": {
-    "fount-js": "^0.0.1",
+    "fount-js": "file:../../../../fount/src/client/javascript",
     "chai": "^5.1.1",
     "mocha": "^10.7.3",
     "sessionless-node": "^0.11.0",

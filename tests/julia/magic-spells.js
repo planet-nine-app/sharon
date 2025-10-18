@@ -47,7 +47,7 @@ describe('Julia MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('juliaUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('juliaUserCreate result:', result);
 
@@ -62,12 +62,19 @@ describe('Julia MAGIC Spell Tests', () => {
   it('should create second user for association tests', async () => {
     const timestamp = Date.now().toString();
 
-    // Generate second set of keys
-    const keys2 = {};
-    await sessionless.generateKeys(() => keys2, () => keys2);
+    // Generate second set of keys in a temporary variable
+    let tempKeys = {};
+    tempKeys = await sessionless.generateKeys(() => { return tempKeys; }, () => { return tempKeys; });
+
+    // Save the pubKey before restoring original keys
+    const keys2PubKey = tempKeys.pubKey;
+
+    // Restore original keys for spell signing (re-initialize sessionless with original keys)
+    sessionless.saveKeys = () => { return keys; };
+    sessionless.getKeys = () => { return keys; };
 
     const userData = {
-      pubKey: keys2.pubKey,
+      pubKey: keys2PubKey,
       keys: {interactingKeys: {}, coordinatingKeys: {}}
     };
 
@@ -86,7 +93,7 @@ describe('Julia MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('juliaUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', true);
     result.should.have.property('user');
@@ -116,7 +123,7 @@ describe('Julia MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('juliaUserAssociateSignedPrompt', spell);
+    const result = await fount.resolve(spell);
 
     console.log('juliaUserAssociateSignedPrompt result:', result);
 
@@ -145,7 +152,7 @@ describe('Julia MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('juliaMessage', spell);
+    const result = await fount.resolve(spell);
 
     console.log('juliaMessage result:', result);
 
@@ -175,7 +182,7 @@ describe('Julia MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('juliaUserCoordinate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('juliaUserCoordinate result:', result);
 
@@ -209,7 +216,7 @@ describe('Julia MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('juliaNfcVerify', spell);
+    const result = await fount.resolve(spell);
 
     console.log('juliaNfcVerify result:', result);
 
@@ -236,7 +243,7 @@ describe('Julia MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('juliaUserDelete', spell);
+    const result = await fount.resolve(spell);
 
     console.log('juliaUserDelete result:', result);
 
@@ -264,7 +271,7 @@ describe('Julia MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('juliaUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -289,7 +296,7 @@ describe('Julia MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('juliaMessage', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -314,7 +321,7 @@ describe('Julia MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('juliaUserCoordinate', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');

@@ -53,7 +53,7 @@ describe('Pref MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('prefUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('prefUserCreate result:', result);
 
@@ -94,7 +94,7 @@ describe('Pref MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('prefUserPreferences', spell);
+    const result = await fount.resolve(spell);
 
     console.log('prefUserPreferences result:', result);
 
@@ -131,7 +131,7 @@ describe('Pref MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('prefUserGlobalPreferences', spell);
+    const result = await fount.resolve(spell);
 
     console.log('prefUserGlobalPreferences result:', result);
 
@@ -162,7 +162,7 @@ describe('Pref MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('prefUserDelete', spell);
+    const result = await fount.resolve(spell);
 
     console.log('prefUserDelete result:', result);
 
@@ -194,7 +194,7 @@ describe('Pref MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('prefUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('prefUserCreate (invalid) result:', result);
 
@@ -229,7 +229,7 @@ describe('Pref MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('prefUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('prefUserCreate (too many) result:', result);
 
@@ -257,7 +257,7 @@ describe('Pref MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('prefUserPreferences', spell);
+    const result = await fount.resolve(spell);
 
     console.log('prefUserPreferences (missing fields) result:', result);
 

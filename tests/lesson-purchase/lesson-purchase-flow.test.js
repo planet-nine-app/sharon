@@ -25,13 +25,59 @@ const signWithKey = async (message, keys) => {
  * 5. Teacher and student progress through contract steps
  * 6. Teacher grants nineum permission
  * 7. Student collects lesson (with nineum check)
+ *
+ * Usage: ENVIRONMENT=ent npm test
+ * Environment: 'local', 'test', or any subdomain prefix (default: local)
  */
 
-// Service URLs
-fount.baseURL = process.env.FOUNT_URL || 'http://127.0.0.1:5117/';
-bdo.baseURL = process.env.BDO_URL || 'http://127.0.0.1:5114/';
-const COVENANT_URL = process.env.COVENANT_URL || 'http://127.0.0.1:5122/';
-addie.baseURL = process.env.ADDIE_URL || 'http://127.0.0.1:5116/';
+// Configuration
+const ENVIRONMENT = process.env.ENVIRONMENT || 'local';
+
+console.log(`\n🧪 Lesson Purchase Flow Test`);
+console.log(`📍 Environment: ${ENVIRONMENT}`);
+console.log('==========================================\n');
+
+// Environment-specific service URLs
+const getServiceURLs = (env) => {
+  if (env === 'local') {
+    return {
+      fount: 'http://127.0.0.1:5117/',
+      bdo: 'http://127.0.0.1:5114/',
+      covenant: 'http://127.0.0.1:5122/',
+      addie: 'http://127.0.0.1:5116/'
+    };
+  } else if (env === 'test') {
+    // Use test ports (can be customized based on BASE_NUMBER if needed)
+    return {
+      fount: 'http://127.0.0.1:5117/',
+      bdo: 'http://127.0.0.1:5114/',
+      covenant: 'http://127.0.0.1:5122/',
+      addie: 'http://127.0.0.1:5116/'
+    };
+  } else {
+    // For any other environment, use it as a subdomain prefix (e.g., 'ent', 'staging', 'prod')
+    return {
+      fount: `https://${env}.fount.allyabase.com/`,
+      bdo: `https://${env}.bdo.allyabase.com/`,
+      covenant: `https://${env}.covenant.allyabase.com/`,
+      addie: `https://${env}.addie.allyabase.com/`
+    };
+  }
+};
+
+const SERVICES = getServiceURLs(ENVIRONMENT);
+
+// Service URLs (allow env var overrides)
+fount.baseURL = process.env.FOUNT_URL || SERVICES.fount;
+bdo.baseURL = process.env.BDO_URL || SERVICES.bdo;
+const COVENANT_URL = process.env.COVENANT_URL || SERVICES.covenant;
+addie.baseURL = process.env.ADDIE_URL || SERVICES.addie;
+
+console.log(`🔗 Service URLs:`);
+console.log(`   Fount: ${fount.baseURL}`);
+console.log(`   BDO: ${bdo.baseURL}`);
+console.log(`   Covenant: ${COVENANT_URL}`);
+console.log(`   Addie: ${addie.baseURL}\n`);
 
 // MAGIC spell casting helpers
 const magic = {
@@ -214,10 +260,17 @@ describe('Lesson Purchase Flow', () => {
   };
 
   // ============================================================================
-  // TEST SETUP: Clean Database Before Tests
+  // TEST SETUP: Clean Database Before Tests (local/test only)
   // ============================================================================
 
   before(async function() {
+    // Skip Docker rebuild for remote environments
+    if (ENVIRONMENT !== 'local' && ENVIRONMENT !== 'test') {
+      console.log(`⏭️  Skipping Docker rebuild for remote environment: ${ENVIRONMENT}`);
+      console.log('✅ Using existing remote services\n');
+      return;
+    }
+
     // Set timeout to 10 minutes for complete Docker rebuild
     this.timeout(600000);
 
@@ -516,12 +569,27 @@ describe('Lesson Purchase Flow', () => {
     it('Stellation user should add purchaseLesson spell to spellbook', async () => {
       const timestamp = new Date().getTime() + '';
 
-      const SUBDOMAIN = process.env.SUBDOMAIN || 'dev';
+      // Build spell destinations based on environment
+      const getSpellURLs = (env) => {
+        if (env === 'local' || env === 'test') {
+          return {
+            covenant: 'http://localhost:5122/magic/spell/',
+            fount: 'http://localhost:5117/resolve/'
+          };
+        } else {
+          return {
+            covenant: `https://${env}.covenant.allyabase.com/magic/spell/`,
+            fount: `https://${env}.fount.allyabase.com/resolve/`
+          };
+        }
+      };
+
+      const spellURLs = getSpellURLs(ENVIRONMENT);
       const purchaseLessonDefinition = {
         cost: 0,
         destinations: [
-          { stopName: 'covenant', stopURL: process.env.LOCALHOST ? 'http://localhost:5122/magic/spell/' : `https://${SUBDOMAIN}.covenant.allyabase.com/magic/spell/` },
-          { stopName: 'fount', stopURL: process.env.LOCALHOST ? 'http://localhost:5117/resolve/' : `https://${SUBDOMAIN}.fount.allyabase.com/resolve/` }
+          { stopName: 'covenant', stopURL: spellURLs.covenant },
+          { stopName: 'fount', stopURL: spellURLs.fount }
         ],
         resolver: 'fount',
         mp: false

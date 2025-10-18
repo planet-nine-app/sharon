@@ -58,7 +58,7 @@ describe('Prof MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('profUserProfile', spell);
+    const result = await fount.resolve(spell);
 
     console.log('profUserProfile result:', result);
 
@@ -96,7 +96,7 @@ describe('Prof MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('profUserProfile', spell);
+    const result = await fount.resolve(spell);
 
     console.log('profUserProfile with image result:', result);
 
@@ -129,7 +129,7 @@ describe('Prof MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('profUserProfileUpdate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('profUserProfileUpdate result:', result);
 
@@ -163,7 +163,7 @@ describe('Prof MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('profUserProfileUpdate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('profUserProfileUpdate with image result:', result);
 
@@ -190,7 +190,7 @@ describe('Prof MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('profUserProfileDelete', spell);
+    const result = await fount.resolve(spell);
 
     console.log('profUserProfileDelete result:', result);
 
@@ -218,7 +218,7 @@ describe('Prof MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('profUserProfile', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -243,7 +243,7 @@ describe('Prof MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('profUserProfile', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');
@@ -271,7 +271,7 @@ describe('Prof MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('profUserProfileUpdate', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error', 'Profile not found');
@@ -296,7 +296,7 @@ describe('Prof MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('profUserProfileDelete', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error', 'Profile not found');
@@ -323,7 +323,7 @@ describe('Prof MAGIC Spell Tests', () => {
     const message = timestamp + spell.spell + spell.casterUUID + spell.totalCost + spell.mp + spell.ordinal;
     spell.casterSignature = await sessionless.sign(message);
 
-    const result = await fount.castSpell('profUserProfileUpdate', spell);
+    const result = await fount.resolve(spell);
 
     result.should.have.property('success', false);
     result.should.have.property('error');

@@ -60,7 +60,7 @@ describe('BDO MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('bdoUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('bdoUserCreate result:', result);
 
@@ -99,7 +99,7 @@ describe('BDO MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('bdoUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('bdoUserCreate (public) result:', result);
 
@@ -137,7 +137,7 @@ describe('BDO MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('bdoUserBdo', spell);
+    const result = await fount.resolve(spell);
 
     console.log('bdoUserBdo result:', result);
 
@@ -179,7 +179,7 @@ describe('BDO MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('bdoUserBases', spell);
+    const result = await fount.resolve(spell);
 
     console.log('bdoUserBases result:', result);
 
@@ -220,7 +220,7 @@ describe('BDO MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('bdoUserSpellbooks', spell);
+    const result = await fount.resolve(spell);
 
     console.log('bdoUserSpellbooks result:', result);
 
@@ -249,7 +249,7 @@ describe('BDO MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('bdoUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('bdoUserCreate (missing hash) result:', result);
 
@@ -279,7 +279,7 @@ describe('BDO MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('bdoUserBdo', spell);
+    const result = await fount.resolve(spell);
 
     console.log('bdoUserBdo (missing uuid) result:', result);
 
@@ -307,7 +307,7 @@ describe('BDO MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('bdoUserBases', spell);
+    const result = await fount.resolve(spell);
 
     console.log('bdoUserBases (missing fields) result:', result);
 
@@ -337,7 +337,7 @@ describe('BDO MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('bdoUserSpellbooks', spell);
+    const result = await fount.resolve(spell);
 
     console.log('bdoUserSpellbooks (missing spellbook) result:', result);
 
@@ -372,7 +372,7 @@ describe('BDO MAGIC Spell Tests', () => {
     const createMessage = timestamp1 + createSpell.spell + createSpell.casterUUID + createSpell.totalCost + createSpell.mp + createSpell.ordinal;
     createSpell.casterSignature = await sessionless.sign(createMessage);
 
-    await fount.castSpell('bdoUserCreate', createSpell);
+    await fount.resolve(createSpell);
 
     // Try to overwrite with different pubKey
     const timestamp2 = Date.now().toString();
@@ -397,7 +397,7 @@ describe('BDO MAGIC Spell Tests', () => {
     const updateMessage = timestamp2 + updateSpell.spell + updateSpell.casterUUID + updateSpell.totalCost + updateSpell.mp + updateSpell.ordinal;
     updateSpell.casterSignature = await sessionless.sign(updateMessage);
 
-    const result = await fount.castSpell('bdoUserBdo', updateSpell);
+    const result = await fount.resolve(updateSpell);
 
     console.log('bdoUserBdo (wrong pubKey) result:', result);
 

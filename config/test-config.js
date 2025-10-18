@@ -6,6 +6,7 @@
 
 // Environment-based configuration
 const ENVIRONMENT = process.env.NODE_ENV || 'test';
+const USE_DIRECT_PORTS = process.env.USE_DIRECT_PORTS === 'true' || ENVIRONMENT === 'local';
 const BASE_URL = process.env.ALLYABASE_BASE_URL || 'http://localhost:8080';
 
 // Service configuration based on nginx path-based routing
@@ -14,7 +15,7 @@ export const serviceConfig = {
   fount: {
     name: 'Fount',
     url: `${BASE_URL}/fount`,
-    directPort: 3002, // For fallback/debugging
+    directPort: 3006,
     description: 'MAGIC protocol & nineum management'
   },
 
@@ -22,7 +23,7 @@ export const serviceConfig = {
   julia: {
     name: 'Julia',
     url: `${BASE_URL}/julia`,
-    directPort: 3006,
+    directPort: 3000,
     description: 'P2P messaging & key coordination'
   },
 
@@ -68,14 +69,14 @@ export const serviceConfig = {
   pref: {
     name: 'Pref',
     url: `${BASE_URL}/pref`,
-    directPort: 3001,
+    directPort: 3002,
     description: 'Preferences storage'
   },
 
   continuebee: {
     name: 'ContinueBee',
     url: `${BASE_URL}/continuebee`,
-    directPort: 3000,
+    directPort: 2999,
     description: 'State verification'
   },
 
@@ -89,14 +90,14 @@ export const serviceConfig = {
   minnie: {
     name: 'Minnie',
     url: `${BASE_URL}/minnie`,
-    directPort: 3009,
+    directPort: 2525,
     description: 'Email handling'
   },
 
   aretha: {
     name: 'Aretha',
     url: `${BASE_URL}/aretha`,
-    directPort: 3010,
+    directPort: 7277,
     description: 'Limited-run products'
   },
 
@@ -158,6 +159,10 @@ export function getServiceUrl(serviceName) {
   const service = serviceConfig[serviceName];
   if (!service) {
     throw new Error(`Unknown service: ${serviceName}`);
+  }
+  // Use direct ports for local/single-base deployment
+  if (USE_DIRECT_PORTS) {
+    return `http://localhost:${service.directPort}`;
   }
   return service.url;
 }

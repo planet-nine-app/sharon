@@ -52,7 +52,7 @@ describe('Joan MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('joanUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('joanUserCreate result:', result);
 
@@ -86,7 +86,7 @@ describe('Joan MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('joanUserUpdateHash', spell);
+    const result = await fount.resolve(spell);
 
     console.log('joanUserUpdateHash result:', result);
 
@@ -116,7 +116,7 @@ describe('Joan MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('joanUserDelete', spell);
+    const result = await fount.resolve(spell);
 
     console.log('joanUserDelete result:', result);
 
@@ -143,7 +143,7 @@ describe('Joan MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('joanUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('joanUserCreate (missing fields) result:', result);
 
@@ -173,7 +173,7 @@ describe('Joan MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('joanUserUpdateHash', spell);
+    const result = await fount.resolve(spell);
 
     console.log('joanUserUpdateHash (non-existent) result:', result);
 

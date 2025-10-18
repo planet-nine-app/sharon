@@ -56,7 +56,7 @@ describe('Continuebee MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('continuebeeUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('continuebeeUserCreate result:', result);
 
@@ -91,7 +91,7 @@ describe('Continuebee MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('continuebeeUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('continuebeeUserCreate (existing) result:', result);
 
@@ -122,13 +122,16 @@ describe('Continuebee MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('continuebeeUserUpdateHash', spell);
+    const result = await fount.resolve(spell);
 
     console.log('continuebeeUserUpdateHash result:', result);
 
     result.should.have.property('success', true);
     result.should.have.property('user');
     result.user.should.have.property('hash', newTestHash);
+
+    // Update savedUser to the new user returned from the update operation
+    savedUser = result.user;
   });
 
   it('should delete user via continuebeeUserDelete spell', async () => {
@@ -152,7 +155,7 @@ describe('Continuebee MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('continuebeeUserDelete', spell);
+    const result = await fount.resolve(spell);
 
     console.log('continuebeeUserDelete result:', result);
 
@@ -180,7 +183,7 @@ describe('Continuebee MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('continuebeeUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('continuebeeUserCreate (missing pubKey) result:', result);
 
@@ -209,7 +212,7 @@ describe('Continuebee MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('continuebeeUserCreate', spell);
+    const result = await fount.resolve(spell);
 
     console.log('continuebeeUserCreate (missing hash) result:', result);
 
@@ -238,7 +241,7 @@ describe('Continuebee MAGIC Spell Tests', () => {
     const createMessage = timestamp1 + createSpell.spell + createSpell.casterUUID + createSpell.totalCost + createSpell.mp + createSpell.ordinal;
     createSpell.casterSignature = await sessionless.sign(createMessage);
 
-    const createResult = await fount.castSpell('continuebeeUserCreate', createSpell);
+    const createResult = await fount.resolve(createSpell);
     const testUser = createResult.user;
 
     // Try to update with wrong hash
@@ -262,7 +265,7 @@ describe('Continuebee MAGIC Spell Tests', () => {
     const updateMessage = timestamp2 + updateSpell.spell + updateSpell.casterUUID + updateSpell.totalCost + updateSpell.mp + updateSpell.ordinal;
     updateSpell.casterSignature = await sessionless.sign(updateMessage);
 
-    const result = await fount.castSpell('continuebeeUserUpdateHash', updateSpell);
+    const result = await fount.resolve(updateSpell);
 
     console.log('continuebeeUserUpdateHash (wrong hash) result:', result);
 
@@ -290,7 +293,7 @@ describe('Continuebee MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('continuebeeUserDelete', spell);
+    const result = await fount.resolve(spell);
 
     console.log('continuebeeUserDelete (missing fields) result:', result);
 
@@ -320,7 +323,7 @@ describe('Continuebee MAGIC Spell Tests', () => {
     spell.casterSignature = await sessionless.sign(message);
 
     // Cast the spell
-    const result = await fount.castSpell('continuebeeUserUpdateHash', spell);
+    const result = await fount.resolve(spell);
 
     console.log('continuebeeUserUpdateHash (missing newHash) result:', result);
 
