@@ -36,6 +36,7 @@ async function runMagicSpellTests() {
   let servicesPassedCount = 0;
   let servicesFailedCount = 0;
   const failedServices = [];
+  const allFailures = [];
 
   let totalTestsPassing = 0;
   let totalTestsFailing = 0;
@@ -51,12 +52,17 @@ async function runMagicSpellTests() {
 
     console.log(`🧙 Testing ${test.service} MAGIC spells...`);
 
-    const result = await runTest(testPath);
+    const result = await runTest(testPath, test.service, test.path);
 
     // Accumulate test counts
     totalTestsPassing += result.passing;
     totalTestsFailing += result.failing;
     totalTestsPending += result.pending;
+
+    // Accumulate failures
+    if (result.failures && result.failures.length > 0) {
+      allFailures.push(...result.failures);
+    }
 
     if (result.success) {
       console.log(`✅ ${test.service} MAGIC spells passed\n`);
@@ -83,6 +89,24 @@ async function runMagicSpellTests() {
     console.log(`\n   Failed Services: ${failedServices.join(', ')}`);
   }
 
+  // Display detailed failure information
+  if (allFailures.length > 0) {
+    console.log('\n\n❌ DETAILED FAILURE REPORT\n');
+    console.log('═'.repeat(80));
+
+    allFailures.forEach((failure, index) => {
+      console.log(`\n${index + 1}. ${failure.service} - ${failure.testName}`);
+      console.log(`   File: ${failure.file}:${failure.line}`);
+      console.log(`   Error: ${failure.error}`);
+      if (failure.actual || failure.expected) {
+        console.log(`   Expected: ${failure.expected}`);
+        console.log(`   Actual: ${failure.actual}`);
+      }
+    });
+
+    console.log('\n' + '═'.repeat(80));
+  }
+
   console.log('\n🎉 MAGIC Protocol conversion complete!');
   console.log('   Total routes converted: 64');
   console.log('   Total services with MAGIC: 12');
@@ -90,7 +114,7 @@ async function runMagicSpellTests() {
   process.exit(servicesFailedCount > 0 ? 1 : 0);
 }
 
-async function runTest(testPath) {
+async function runTest(testPath, serviceName, relativePath) {
   return new Promise((resolve) => {
     let output = '';
 
@@ -124,11 +148,15 @@ async function runTest(testPath) {
       const failing = failingMatch ? parseInt(failingMatch[1]) : 0;
       const pending = pendingMatch ? parseInt(pendingMatch[1]) : 0;
 
+      // Parse failures
+      const failures = parseFailures(output, serviceName, relativePath);
+
       resolve({
         success: code === 0,
         passing,
         failing,
-        pending
+        pending,
+        failures
       });
     });
 
@@ -138,10 +166,116 @@ async function runTest(testPath) {
         success: false,
         passing: 0,
         failing: 0,
-        pending: 0
+        pending: 0,
+        failures: []
       });
     });
   });
+}
+
+function parseFailures(output, serviceName, relativePath) {
+  const failures = [];
+
+  // Split output into lines and process
+  const lines = output.split('\n');
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Look for failure marker: "  1) Test Suite Name"
+    const failureMarker = line.match(/^\s*(\d+)\)\s+(.+)$/);
+    if (failureMarker) {
+      const testSuite = failureMarker[2].trim();
+      i++;
+
+      // Next line should be the test name (indented more)
+      if (i < lines.length && lines[i].match(/^\s{5,}/)) {
+        const testName = lines[i].trim().replace(/:$/, '');
+        i++;
+
+        // Collect error information
+        let errorMessage = '';
+        let expected = '';
+        let actual = '';
+        let file = relativePath;
+        let lineNumber = '';
+        let inExpectedActual = false;
+
+        // Read until we hit the next failure or end
+        while (i < lines.length) {
+          const errorLine = lines[i];
+
+          // Stop if we hit the next failure
+          if (errorLine.match(/^\s*\d+\)\s+/)) {
+            break;
+          }
+
+          // Skip empty lines
+          if (!errorLine.trim()) {
+            i++;
+            continue;
+          }
+
+          // Capture error message (AssertionError, TypeError, etc.)
+          if (!errorMessage && errorLine.match(/^\s+(AssertionError|TypeError|Error):/)) {
+            errorMessage = errorLine.trim();
+          }
+
+          // Check for expected/actual section
+          if (errorLine.includes('+ expected - actual')) {
+            inExpectedActual = true;
+            i++;
+            continue;
+          }
+
+          // Capture expected/actual values
+          if (inExpectedActual) {
+            if (errorLine.trim().startsWith('-')) {
+              actual = errorLine.replace(/^\s*-/, '').trim();
+            } else if (errorLine.trim().startsWith('+')) {
+              expected = errorLine.replace(/^\s*\+/, '').trim();
+              inExpectedActual = false; // Usually expected comes after actual
+            }
+          }
+
+          // Extract file and line number from stack trace
+          const stackMatch = errorLine.match(/at\s+.+?\s+\((?:file:\/\/)?([^:]+):(\d+):\d+\)/);
+          if (stackMatch && !lineNumber) {
+            const fullPath = stackMatch[1];
+            lineNumber = stackMatch[2];
+            // Simplify file path
+            if (fullPath.includes(relativePath) || fullPath.endsWith(relativePath.split('/').pop())) {
+              file = relativePath;
+            }
+          }
+
+          i++;
+
+          // Stop after we've found stack trace
+          if (stackMatch) {
+            break;
+          }
+        }
+
+        failures.push({
+          service: serviceName,
+          testName: `${testSuite} - ${testName}`,
+          error: errorMessage || 'Unknown error',
+          expected,
+          actual,
+          file,
+          line: lineNumber
+        });
+      } else {
+        i++;
+      }
+    } else {
+      i++;
+    }
+  }
+
+  return failures;
 }
 
 runMagicSpellTests().catch(console.error);

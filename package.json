@@ -16,6 +16,7 @@
     "test:bdo": "cd tests/bdo && npm test",
     "test:julia": "cd tests/julia && npm test",
     "test:sanora": "cd tests/sanora && npm test",
+    "test:sanora:orders": "mocha tests/sanora/orders-webpage.test.js --timeout 10000",
     "test:dolores": "cd tests/dolores && npm test",
     "test:covenant": "cd tests/covenant && npm test",
     "test:addie": "cd tests/addie && npm test",

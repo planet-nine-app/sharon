@@ -86,6 +86,11 @@ npm run test:aretha:magic
 npm run test:continuebee:magic
 ```
 
+### Run Specialized Tests
+```bash
+npm run test:sanora:orders    # Sanora orders webpage with AuthTeam
+```
+
 ## MAGIC Spell Testing (October 2025)
 
 Sharon now includes comprehensive MAGIC spell tests for all 12 services that have been converted to the MAGIC protocol.
@@ -176,5 +181,43 @@ Tests output to console with clear pass/fail indicators:
 - 📊 Summary statistics
 - Detailed error messages for failures
 
+## Sanora Orders Webpage Tests (October 2025)
+
+Sharon now includes comprehensive tests for the Sanora orders dashboard with AuthTeam authentication.
+
+### Test Coverage
+- **32 Tests** covering all aspects of the orders webpage
+- **AuthTeam Authentication**: Color sequence challenge generation and completion
+- **Session Management**: 1-hour session timeout verification
+- **Orders Display**: Order cards, shipping addresses, status badges
+- **Database Integration**: `getAllOrders()` method testing
+- **Security**: Session-based access control, unique tokens, random sequences
+
+### Running Orders Tests
+
+```bash
+npm run test:sanora:orders
+```
+
+### Features Tested
+1. **AuthTeam Challenge**: Random color sequence generation (5 colors)
+2. **Challenge Completion**: Session token validation and authentication
+3. **Access Control**: Redirect unauthenticated users to `/authteam`
+4. **Orders Dashboard**: Display all orders with proper HTML structure
+5. **Shipping Addresses**: Highlighted address section with all fields
+6. **Status Badges**: Color-coded badges (pending, processing, shipped, delivered, cancelled)
+7. **UI/UX**: Gradient background, responsive grid, refresh button
+8. **Database**: getAllOrders() method with deduplication and sorting
+9. **Integration**: Purchase spell flow with shipping addresses in components
+
+### Test File
+- **Location**: `/tests/sanora/orders-webpage.test.js`
+- **Documentation**: `/tests/sanora/ORDERS-TESTS-README.md`
+
+### Requirements
+- Sanora service running on port 7243
+- Redis database with orders data
+- Session middleware configured
+
 ## Last Updated
-October 14, 2025 - Added comprehensive MAGIC spell testing infrastructure. All 12 services now have centralized MAGIC spell tests in Sharon with unified test runner support. Total: 64 spells, 120 tests.
+October 24, 2025 - Added comprehensive Sanora orders webpage tests with AuthTeam authentication (32 tests). Updated MAGIC spell testing infrastructure. Total: 64 spells, 152 tests across all services.
