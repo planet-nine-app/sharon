@@ -36,6 +36,7 @@
     "test:aretha:magic": "mocha tests/aretha/magic-spells.js --timeout 10000",
     "test:pref:magic": "mocha tests/pref/magic-spells.js --timeout 10000",
     "test:joan:magic": "mocha tests/joan/magic-spells.js --timeout 10000",
+    "test:the-advancement": "cd tests/the-advancement && npm test",
     "env:start": "./start-test-environment.sh",
     "launch": "./launch-status-check.sh",
     "env:stop": "docker-compose down",

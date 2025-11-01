@@ -88,7 +88,8 @@ npm run test:continuebee:magic
 
 ### Run Specialized Tests
 ```bash
-npm run test:sanora:orders    # Sanora orders webpage with AuthTeam
+npm run test:sanora:orders        # Sanora orders webpage with AuthTeam
+npm run test:the-advancement      # The Advancement payment flows (NEW)
 ```
 
 ## MAGIC Spell Testing (October 2025)
@@ -219,5 +220,103 @@ npm run test:sanora:orders
 - Redis database with orders data
 - Session middleware configured
 
+## The Advancement Payment Flow Tests (October 2025)
+
+Sharon now includes comprehensive integration tests for The Advancement iOS and Android apps, focusing on Stripe payment processing via Addie.
+
+### Test Coverage
+- **32 Tests** covering complete payment flows
+- **Stripe Connected Accounts**: Create Express accounts for sellers to receive funds
+- **Payment Methods**: Save cards via SetupIntent, retrieve saved cards
+- **Payment Splits**: Affiliate commission distribution (90% creator, 10% affiliate)
+- **Transfer Processing**: Post-payment fund distribution to Connected Accounts
+- **Stripe Issuing**: Virtual debit cards for the unbanked
+
+### Running The Advancement Tests
+
+```bash
+npm run test:the-advancement
+```
+
+### Key Test Scenarios
+
+1. **User Creation**:
+   - Alice (buyer with virtual card)
+   - Bob (seller/affiliate receiving 10% commission)
+   - Carl (product creator receiving 90% revenue)
+
+2. **Connected Account Setup**:
+   - Create Stripe Express accounts
+   - Generate onboarding links
+   - Check account status (details submitted, charges/payouts enabled)
+   - Refresh onboarding links
+
+3. **Payment Method Management**:
+   - Create SetupIntent for saving cards
+   - Retrieve saved payment methods
+   - Delete payment methods
+
+4. **Purchase with Affiliate Split**:
+   - Create payment intent with payee metadata
+   - Bob receives $5 (10% of $50 product)
+   - Carl receives $45 (90% of $50 product)
+   - Process transfers after payment confirmation
+
+5. **Virtual Cards for Unbanked**:
+   - Create Stripe Issuing cardholder
+   - Issue virtual debit card
+   - Set spending limits ($1000/month)
+   - View card transactions
+
+### Test Files
+- **Location**: `/tests/the-advancement/payment-flows.test.js`
+- **Documentation**: `/tests/the-advancement/README.md`
+
+### Requirements
+- Addie service running on port 3004
+- Stripe API keys configured:
+  - `STRIPE_KEY=sk_test_...`
+  - `STRIPE_PUBLISHING_KEY=pk_test_...`
+- sessionless-node dependency installed
+
+### Integration with The Advancement App
+
+These tests validate the complete flow from The Advancement app:
+- **iOS**: `/the-advancement/src/The Advancement/Shared (App)/PaymentMethodViewController.swift`
+- **Android**: `/the-advancement/src/android/app/src/main/java/app/planetnine/theadvancement/ui/payment/PaymentMethodActivity.kt`
+
+Both apps use the same Addie endpoints tested here for:
+- Saving cards for purchases
+- Creating seller accounts to receive affiliate commissions
+- Issuing virtual cards for users without traditional banking
+
+## Test Structure (Updated)
+
+```
+sharon/
+├── tests/
+│   ├── fount/          # Fount service tests + MAGIC spells
+│   ├── bdo/            # BDO service tests + MAGIC spells
+│   ├── covenant/       # Covenant service tests + MAGIC spells
+│   ├── prof/           # Prof service tests + MAGIC spells
+│   ├── addie/          # Addie service tests + MAGIC spells
+│   ├── julia/          # Julia service tests + MAGIC spells
+│   ├── sanora/         # Sanora service tests + MAGIC spells
+│   ├── dolores/        # Dolores service tests + MAGIC spells
+│   ├── joan/           # Joan service tests + MAGIC spells
+│   ├── pref/           # Pref service tests + MAGIC spells
+│   ├── aretha/         # Aretha service tests + MAGIC spells
+│   ├── continuebee/    # Continuebee service tests + MAGIC spells
+│   ├── the-advancement/ # The Advancement payment flows (NEW)
+│   ├── magic/          # MAGIC protocol tests
+│   ├── sessionless/    # Sessionless auth tests
+│   └── teleportation/  # Teleportation protocol tests
+├── run-all-tests.js          # Master test runner
+├── run-service-tests.js       # Service test runner
+├── run-protocol-tests.js      # Protocol test runner
+├── run-magic-spell-tests.js   # MAGIC spell test runner
+└── package.json
+```
+
 ## Last Updated
-October 24, 2025 - Added comprehensive Sanora orders webpage tests with AuthTeam authentication (32 tests). Updated MAGIC spell testing infrastructure. Total: 64 spells, 152 tests across all services.
+October 31, 2025 - Added comprehensive The Advancement payment flow tests (32 tests) covering Stripe Connected Accounts, payment methods, affiliate splits, transfers, and virtual cards for the unbanked. Total: 64 spells, 184 tests across all services and applications.
