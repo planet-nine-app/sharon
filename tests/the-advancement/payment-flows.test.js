@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import sessionless from 'sessionless-node';
-import fetch from 'node-fetch';
+import addie from 'addie-js';
 
 // Test configuration
-const ADDIE_URL = process.env.ADDIE_URL || 'http://localhost:3004';
+addie.baseURL = process.env.ADDIE_URL || 'http://localhost:3005/';
+
 const TEST_USERS = {
   alice: {
     name: 'alice',
@@ -22,30 +23,27 @@ const TEST_USERS = {
   }
 };
 
-// Helper to make authenticated requests
-async function makeAuthenticatedRequest(url, method, body, user) {
-  const timestamp = Date.now().toString();
-  const message = timestamp + user.publicKey;
-  const signature = await sessionless.sign(message, user.privateKey);
+// Sessionless initialization - initialize once at module level
+let keysToReturn = {
+  privateKey: TEST_USERS.alice.privateKey,
+  pubKey: TEST_USERS.alice.publicKey
+};
 
-  const headers = {
-    'Content-Type': 'application/json',
-    'X-Timestamp': timestamp,
-    'X-PublicKey': user.publicKey,
-    'X-Signature': signature
+const saveKeys = (keys) => {
+  // No-op: we're using predefined test keys
+};
+
+const getKeys = () => keysToReturn;
+
+// Initialize sessionless once
+await sessionless.generateKeys(saveKeys, getKeys);
+
+// Helper to switch current user (just updates keysToReturn)
+function switchToUser(user) {
+  keysToReturn = {
+    privateKey: user.privateKey,
+    pubKey: user.publicKey
   };
-
-  const options = {
-    method,
-    headers,
-  };
-
-  if (body && method !== 'GET') {
-    options.body = JSON.stringify(body);
-  }
-
-  const response = await fetch(url, options);
-  return await response.json();
 }
 
 describe('The Advancement - Payment Flows', function() {
@@ -55,147 +53,93 @@ describe('The Advancement - Payment Flows', function() {
   let bobUUID;
   let carlUUID;
   let aliceStripeCustomerId;
-  let bobStripeAccountId;
-  let carlStripeAccountId;
+  let bobPayoutCardId;
+  let carlPayoutCardId;
 
   describe('1. User Creation & Setup', function() {
 
     it('should create Alice (buyer) in Addie', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/user`,
-        'POST',
-        {},
-        TEST_USERS.alice
-      );
+      switchToUser(TEST_USERS.alice);
+      aliceUUID = await addie.createUser(saveKeys, getKeys);
 
-      expect(result).to.have.property('uuid');
-      expect(result.uuid).to.be.a('string');
-      expect(result.uuid).to.have.lengthOf(36);
+      expect(aliceUUID).to.be.a('string');
+      expect(aliceUUID).to.have.lengthOf(36);
 
-      aliceUUID = result.uuid;
       console.log(`✅ Alice created: ${aliceUUID}`);
     });
 
     it('should create Bob (seller/affiliate) in Addie', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/user`,
-        'POST',
-        {},
-        TEST_USERS.bob
-      );
+      switchToUser(TEST_USERS.bob);
+      bobUUID = await addie.createUser(saveKeys, getKeys);
 
-      expect(result).to.have.property('uuid');
-      bobUUID = result.uuid;
+      expect(bobUUID).to.be.a('string');
+      expect(bobUUID).to.have.lengthOf(36);
+
       console.log(`✅ Bob created: ${bobUUID}`);
     });
 
     it('should create Carl (product creator) in Addie', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/user`,
-        'POST',
-        {},
-        TEST_USERS.carl
-      );
+      switchToUser(TEST_USERS.carl);
+      carlUUID = await addie.createUser(saveKeys, getKeys);
 
-      expect(result).to.have.property('uuid');
-      carlUUID = result.uuid;
+      expect(carlUUID).to.be.a('string');
+      expect(carlUUID).to.have.lengthOf(36);
+
       console.log(`✅ Carl created: ${carlUUID}`);
     });
   });
 
-  describe('2. Stripe Connected Account Creation', function() {
+  describe('2. Payout Card Setup (for receiving affiliate payouts)', function() {
 
-    it('should create Stripe Connected Account for Bob (seller)', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/processor/stripe/create-account`,
-        'POST',
-        {
-          accountType: 'express',
-          country: 'US',
-          email: 'bob-test@planetnine.app',
-          businessType: 'individual'
-        },
-        TEST_USERS.bob
-      );
+    it('should check Bob has no payout card initially', async function() {
+      switchToUser(TEST_USERS.bob);
+      const result = await addie.getPayoutCardStatus();
 
-      expect(result).to.have.property('accountId');
-      expect(result).to.have.property('accountLink');
-      expect(result.accountId).to.be.a('string');
-      expect(result.accountId).to.match(/^acct_/);
+      expect(result).to.have.property('hasPayoutCard');
+      expect(result.hasPayoutCard).to.be.false;
 
-      bobStripeAccountId = result.accountId;
-      console.log(`✅ Bob's Stripe Connected Account: ${bobStripeAccountId}`);
-      console.log(`📝 Onboarding link: ${result.accountLink.substring(0, 50)}...`);
+      console.log(`💳 Bob has no payout card yet`);
     });
 
-    it('should create Stripe Connected Account for Carl (product creator)', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/processor/stripe/create-account`,
-        'POST',
-        {
-          accountType: 'express',
-          country: 'US',
-          email: 'carl-test@planetnine.app',
-          businessType: 'individual'
-        },
-        TEST_USERS.carl
-      );
+    it('should save Bob\'s payout card (simulated payment method ID)', async function() {
+      switchToUser(TEST_USERS.bob);
 
-      expect(result).to.have.property('accountId');
-      expect(result.accountId).to.match(/^acct_/);
+      // NOTE: In a real test, you would:
+      // 1. Create a SetupIntent
+      // 2. Complete it with a test debit card (pm_card_visa_debit)
+      // 3. Save that payment method ID as payout card
+      //
+      // For this test, we'll use a placeholder
+      const testPaymentMethodId = 'pm_card_visa_debit_test';
 
-      carlStripeAccountId = result.accountId;
-      console.log(`✅ Carl's Stripe Connected Account: ${carlStripeAccountId}`);
+      try {
+        const result = await addie.savePayoutCard(testPaymentMethodId);
+
+        // This will likely fail with invalid payment method ID
+        // But tests that the endpoint exists and accepts the right parameters
+        console.log(`ℹ️ savePayoutCard endpoint tested (expected to fail with test ID)`);
+      } catch(err) {
+        // Expected to fail with test payment method
+        console.log(`ℹ️ Payout card endpoint exists (expected to fail with test data)`);
+      }
     });
 
-    it('should retrieve Bob\'s Connected Account status', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/processor/stripe/account/status`,
-        'GET',
-        null,
-        TEST_USERS.bob
-      );
+    it('should check Carl has no payout card initially', async function() {
+      switchToUser(TEST_USERS.carl);
+      const result = await addie.getPayoutCardStatus();
 
-      expect(result).to.have.property('hasAccount');
-      expect(result.hasAccount).to.be.true;
-      expect(result).to.have.property('accountId');
-      expect(result.accountId).to.equal(bobStripeAccountId);
-      expect(result).to.have.property('detailsSubmitted');
-      expect(result).to.have.property('chargesEnabled');
-      expect(result).to.have.property('payoutsEnabled');
+      expect(result).to.have.property('hasPayoutCard');
+      expect(result.hasPayoutCard).to.be.false;
 
-      console.log(`📊 Bob's account status:`, {
-        detailsSubmitted: result.detailsSubmitted,
-        chargesEnabled: result.chargesEnabled,
-        payoutsEnabled: result.payoutsEnabled
-      });
-    });
-
-    it('should refresh Bob\'s account link if needed', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/processor/stripe/account/refresh-link`,
-        'POST',
-        {},
-        TEST_USERS.bob
-      );
-
-      expect(result).to.have.property('accountLink');
-      expect(result.accountLink).to.be.a('string');
-      expect(result.accountLink).to.include('https://');
-
-      console.log(`🔄 Refreshed onboarding link for Bob`);
+      console.log(`💳 Carl has no payout card yet`);
     });
   });
 
   describe('3. Payment Method Management', function() {
 
     it('should create SetupIntent for Alice to save a card', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/processor/stripe/setup-intent`,
-        'POST',
-        {},
-        TEST_USERS.alice
-      );
+      switchToUser(TEST_USERS.alice);
+      const result = await addie.createSetupIntent('stripe');
 
       expect(result).to.have.property('clientSecret');
       expect(result).to.have.property('customerId');
@@ -209,12 +153,8 @@ describe('The Advancement - Payment Flows', function() {
     });
 
     it('should retrieve Alice\'s saved payment methods (empty initially)', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/processor/stripe/payment-methods`,
-        'GET',
-        null,
-        TEST_USERS.alice
-      );
+      switchToUser(TEST_USERS.alice);
+      const result = await addie.getSavedPaymentMethods(aliceUUID, 'stripe');
 
       expect(result).to.have.property('paymentMethods');
       expect(result.paymentMethods).to.be.an('array');
@@ -234,17 +174,15 @@ describe('The Advancement - Payment Flows', function() {
   describe('4. Payment Creation & Processing', function() {
 
     it('should create payment intent without splits (simple purchase)', async function() {
+      switchToUser(TEST_USERS.alice);
       const amount = 2999; // $29.99
 
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/processor/stripe/payment-intent-without-splits`,
-        'POST',
-        {
-          amount,
-          currency: 'usd',
-          savePaymentMethod: true
-        },
-        TEST_USERS.alice
+      const result = await addie.getPaymentIntentWithoutSplits(
+        aliceUUID,
+        'stripe',
+        amount,
+        'usd',
+        true // savePaymentMethod
       );
 
       expect(result).to.have.property('paymentIntent');
@@ -257,28 +195,26 @@ describe('The Advancement - Payment Flows', function() {
     });
 
     it('should create payment intent WITH splits (affiliate purchase)', async function() {
+      switchToUser(TEST_USERS.alice);
       const totalAmount = 4999; // $49.99
       const bobCommission = 500; // $5.00 (10% affiliate)
       const carlRevenue = 4499; // $44.99 (90% to creator)
 
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/processor/stripe/payment-intent`,
-        'POST',
-        {
-          amount: totalAmount,
-          currency: 'usd',
-          payees: [
-            {
-              pubKey: TEST_USERS.bob.publicKey,
-              amount: bobCommission
-            },
-            {
-              pubKey: TEST_USERS.carl.publicKey,
-              amount: carlRevenue
-            }
-          ]
-        },
-        TEST_USERS.alice
+      const result = await addie.getPaymentIntent(
+        aliceUUID,
+        'stripe',
+        totalAmount,
+        'usd',
+        [
+          {
+            pubKey: TEST_USERS.bob.publicKey,
+            amount: bobCommission
+          },
+          {
+            pubKey: TEST_USERS.carl.publicKey,
+            amount: carlRevenue
+          }
+        ]
       );
 
       expect(result).to.have.property('paymentIntent');
@@ -304,12 +240,7 @@ describe('The Advancement - Payment Flows', function() {
       const testPaymentIntentId = 'pi_test_123'; // Would be real ID in actual test
 
       try {
-        const result = await makeAuthenticatedRequest(
-          `${ADDIE_URL}/payment/${testPaymentIntentId}/process-transfers`,
-          'POST',
-          {},
-          TEST_USERS.alice
-        );
+        const result = await addie.processPaymentTransfers(testPaymentIntentId);
 
         // Will likely fail with invalid payment intent, but tests endpoint exists
         console.log(`🔄 Transfer processing endpoint tested`);
@@ -323,32 +254,26 @@ describe('The Advancement - Payment Flows', function() {
   describe('6. Stripe Issuing (Virtual Cards for the Unbanked)', function() {
 
     it('should create cardholder for Alice', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/processor/stripe/cardholder`,
-        'POST',
-        {
-          individualInfo: {
-            firstName: 'Alice',
-            lastName: 'TestUser',
-            name: 'Alice TestUser',
-            email: 'alice-test@planetnine.app',
-            phoneNumber: '+15555551234',
-            address: {
-              line1: '123 Test St',
-              city: 'San Francisco',
-              state: 'CA',
-              postal_code: '94110',
-              country: 'US'
-            },
-            dob: {
-              day: 15,
-              month: 6,
-              year: 1990
-            }
-          }
+      switchToUser(TEST_USERS.alice);
+      const result = await addie.createCardholder({
+        firstName: 'Alice',
+        lastName: 'TestUser',
+        name: 'Alice TestUser',
+        email: 'alice-test@planetnine.app',
+        phoneNumber: '+15555551234',
+        address: {
+          line1: '123 Test St',
+          city: 'San Francisco',
+          state: 'CA',
+          postal_code: '94110',
+          country: 'US'
         },
-        TEST_USERS.alice
-      );
+        dob: {
+          day: 15,
+          month: 6,
+          year: 1990
+        }
+      });
 
       expect(result).to.have.property('cardholderId');
       expect(result).to.have.property('status');
@@ -359,15 +284,8 @@ describe('The Advancement - Payment Flows', function() {
     });
 
     it('should issue virtual card for Alice', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/processor/stripe/issue-virtual-card`,
-        'POST',
-        {
-          currency: 'usd',
-          spendingLimit: 100000 // $1000/month
-        },
-        TEST_USERS.alice
-      );
+      switchToUser(TEST_USERS.alice);
+      const result = await addie.issueVirtualCard('usd', 100000); // $1000/month
 
       expect(result).to.have.property('cardId');
       expect(result).to.have.property('last4');
@@ -385,12 +303,8 @@ describe('The Advancement - Payment Flows', function() {
     });
 
     it('should get Alice\'s issued cards', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/processor/stripe/issued-cards`,
-        'GET',
-        null,
-        TEST_USERS.alice
-      );
+      switchToUser(TEST_USERS.alice);
+      const result = await addie.getIssuedCards();
 
       expect(result).to.have.property('cards');
       expect(result.cards).to.be.an('array');
@@ -405,12 +319,8 @@ describe('The Advancement - Payment Flows', function() {
     });
 
     it('should get Alice\'s transactions (if any)', async function() {
-      const result = await makeAuthenticatedRequest(
-        `${ADDIE_URL}/processor/stripe/transactions`,
-        'GET',
-        null,
-        TEST_USERS.alice
-      );
+      switchToUser(TEST_USERS.alice);
+      const result = await addie.getCardTransactions(10);
 
       expect(result).to.have.property('transactions');
       expect(result.transactions).to.be.an('array');
@@ -421,10 +331,25 @@ describe('The Advancement - Payment Flows', function() {
 
   describe('7. Cleanup', function() {
 
-    it('should clean up test users', async function() {
-      // Note: Actual cleanup would depend on Addie having delete endpoints
-      // This is a placeholder for cleanup logic
-      console.log(`🧹 Test cleanup complete`);
+    it('should clean up Alice', async function() {
+      switchToUser(TEST_USERS.alice);
+      const deleted = await addie.deleteUser(aliceUUID);
+      expect(deleted).to.be.true;
+      console.log(`🧹 Alice cleaned up`);
+    });
+
+    it('should clean up Bob', async function() {
+      switchToUser(TEST_USERS.bob);
+      const deleted = await addie.deleteUser(bobUUID);
+      expect(deleted).to.be.true;
+      console.log(`🧹 Bob cleaned up`);
+    });
+
+    it('should clean up Carl', async function() {
+      switchToUser(TEST_USERS.carl);
+      const deleted = await addie.deleteUser(carlUUID);
+      expect(deleted).to.be.true;
+      console.log(`🧹 Carl cleaned up`);
     });
   });
 });

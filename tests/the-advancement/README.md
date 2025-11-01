@@ -49,7 +49,7 @@ These tests validate the complete payment flow from The Advancement app through 
 cd addie/src/server/node
 npm install
 npm start
-# Should be running on http://localhost:3004
+# Should be running on http://localhost:3005
 ```
 
 2. **Stripe API Keys**
@@ -228,9 +228,9 @@ The Advancement - Payment Flows
 
 ### Addie Not Running
 ```
-Error: connect ECONNREFUSED 127.0.0.1:3004
+Error: connect ECONNREFUSED 127.0.0.1:3005
 ```
-**Solution**: Start Addie service on port 3004
+**Solution**: Start Addie service on port 3005
 
 ### Missing Stripe Keys
 ```

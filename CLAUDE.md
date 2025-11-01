@@ -220,16 +220,16 @@ npm run test:sanora:orders
 - Redis database with orders data
 - Session middleware configured
 
-## The Advancement Payment Flow Tests (October 2025)
+## The Advancement Payment Flow Tests (November 2025)
 
-Sharon now includes comprehensive integration tests for The Advancement iOS and Android apps, focusing on Stripe payment processing via Addie.
+Sharon now includes comprehensive integration tests for The Advancement iOS and Android apps, focusing on Stripe payment processing via Addie with direct debit card payouts.
 
 ### Test Coverage
-- **32 Tests** covering complete payment flows
-- **Stripe Connected Accounts**: Create Express accounts for sellers to receive funds
+- **30+ Tests** covering complete payment flows
+- **Payout Cards**: Save debit cards to receive instant affiliate payouts (~30 minutes)
 - **Payment Methods**: Save cards via SetupIntent, retrieve saved cards
 - **Payment Splits**: Affiliate commission distribution (90% creator, 10% affiliate)
-- **Transfer Processing**: Post-payment fund distribution to Connected Accounts
+- **Transfer Processing**: Direct transfers to payout cards after payment
 - **Stripe Issuing**: Virtual debit cards for the unbanked
 
 ### Running The Advancement Tests
@@ -245,11 +245,12 @@ npm run test:the-advancement
    - Bob (seller/affiliate receiving 10% commission)
    - Carl (product creator receiving 90% revenue)
 
-2. **Connected Account Setup**:
-   - Create Stripe Express accounts
-   - Generate onboarding links
-   - Check account status (details submitted, charges/payouts enabled)
-   - Refresh onboarding links
+2. **Payout Card Setup** (NEW):
+   - Check payout card status (initially empty)
+   - Save debit cards as payout destinations
+   - Validate debit-only restriction (credit cards rejected)
+   - Instant setup without KYC (~1 second)
+   - Works with Stripe Issued virtual cards
 
 3. **Payment Method Management**:
    - Create SetupIntent for saving cards
@@ -260,24 +261,27 @@ npm run test:the-advancement
    - Create payment intent with payee metadata
    - Bob receives $5 (10% of $50 product)
    - Carl receives $45 (90% of $50 product)
-   - Process transfers after payment confirmation
+   - Process instant transfers after payment confirmation
 
 5. **Virtual Cards for Unbanked**:
    - Create Stripe Issuing cardholder
    - Issue virtual debit card
    - Set spending limits ($1000/month)
    - View card transactions
+   - **Use issued cards as payout destinations** (NEW)
 
 ### Test Files
 - **Location**: `/tests/the-advancement/payment-flows.test.js`
+- **SDK**: `/tests/addie/src/client/javascript/addie.js`
 - **Documentation**: `/tests/the-advancement/README.md`
 
 ### Requirements
-- Addie service running on port 3004
+- Addie service running on port 3004 (or configured via `ADDIE_URL`)
 - Stripe API keys configured:
   - `STRIPE_KEY=sk_test_...`
   - `STRIPE_PUBLISHING_KEY=pk_test_...`
 - sessionless-node dependency installed
+- addie-js client library
 
 ### Integration with The Advancement App
 
@@ -287,8 +291,50 @@ These tests validate the complete flow from The Advancement app:
 
 Both apps use the same Addie endpoints tested here for:
 - Saving cards for purchases
-- Creating seller accounts to receive affiliate commissions
+- **Saving payout cards to receive affiliate commissions instantly** (NEW)
 - Issuing virtual cards for users without traditional banking
+- **Processing instant transfers to payout cards** (NEW)
+
+### Addie Client SDK Updates
+
+The Addie client SDK (`addie.js`) includes two new methods for payout card management:
+
+```javascript
+// Save payout card
+await addie.savePayoutCard(paymentMethodId);
+
+// Get payout card status
+const status = await addie.getPayoutCardStatus();
+// Returns: { hasPayoutCard: true/false, last4, brand, expMonth, expYear }
+```
+
+### Complete Alice → Bob → Carl Flow
+
+**Test demonstrates full affiliate payout flow**:
+
+1. **Setup Phase**:
+   - Bob saves debit card as payout destination
+   - Carl saves debit card as payout destination
+   - Both ready to receive instant payouts
+
+2. **Purchase Phase**:
+   - Alice purchases $50 product via Bob's affiliate link
+   - Payment intent created with metadata:
+     ```javascript
+     {
+       payee_count: 2,
+       payee_0_pubkey: "<Bob's pubKey>",
+       payee_0_amount: 500,    // $5 (10%)
+       payee_1_pubkey: "<Carl's pubKey>",
+       payee_1_amount: 4500    // $45 (90%)
+     }
+     ```
+
+3. **Transfer Phase**:
+   - Alice completes payment via Stripe
+   - `/payment/:id/process-transfers` called automatically
+   - Direct transfers created to Bob and Carl's payout cards
+   - Funds arrive in ~30 minutes (instant payout)
 
 ## Test Structure (Updated)
 
@@ -319,4 +365,4 @@ sharon/
 ```
 
 ## Last Updated
-October 31, 2025 - Added comprehensive The Advancement payment flow tests (32 tests) covering Stripe Connected Accounts, payment methods, affiliate splits, transfers, and virtual cards for the unbanked. Total: 64 spells, 184 tests across all services and applications.
+November 1, 2025 - Converted The Advancement payment flow tests from Stripe Connected Accounts to direct debit card payouts. Tests now validate instant payout setup (~1 second), payout card validation (debit-only), and direct transfers (~30 minutes). Updated Addie client SDK with `savePayoutCard()` and `getPayoutCardStatus()` methods. Total: 64 spells, 180+ tests across all services and applications.

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "sessionless-node": "file:../../../sessionless/src/javascript/node",
+    "addie-js": "file:../../../addie/src/client/javascript",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {

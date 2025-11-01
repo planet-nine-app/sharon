@@ -115,6 +115,35 @@ const addie = {
 
     const res = await _delete(`${addie.baseURL}user/${uuid}`, payload);
     return res.status === 200;
+  },
+
+  // Payout Card methods (for receiving affiliate payouts)
+  savePayoutCard: async (paymentMethodId) => {
+    const keys = await sessionless.getKeys();
+    const timestamp = new Date().getTime() + '';
+    const message = timestamp + keys.pubKey + paymentMethodId;
+    const signature = await sessionless.sign(message);
+
+    const payload = {
+      timestamp,
+      pubKey: keys.pubKey,
+      signature,
+      paymentMethodId
+    };
+
+    const res = await post(`${addie.baseURL}payout-card/save`, payload);
+    return await res.json();
+  },
+
+  getPayoutCardStatus: async () => {
+    const keys = await sessionless.getKeys();
+    const timestamp = new Date().getTime() + '';
+    const message = timestamp + keys.pubKey;
+    const signature = await sessionless.sign(message);
+
+    const url = `${addie.baseURL}payout-card/status?timestamp=${timestamp}&pubKey=${keys.pubKey}&signature=${signature}`;
+    const res = await get(url);
+    return await res.json();
   }
 };
 
