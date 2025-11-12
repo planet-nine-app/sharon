@@ -30,6 +30,10 @@ npm run test:permissions  # Permissions & gating system tests
 npm run test:fount
 npm run test:bdo
 npm run test:julia
+
+# Run service integration tests
+npm run test:glyphenge    # Linktree import & tapestry creation
+npm run test:babelfish    # Matrix messaging bridge
 ```
 
 ### Docker Environment Testing (Production-like with Nginx Routing)
@@ -75,6 +79,11 @@ The `tests/` directory is organized by test categories:
 - `permissions/` - Nineum permission system & MAGIC gating tests
 - `cross-service/` - Multi-service interaction tests
 - `client-server/` - End-to-end client application tests
+
+### **Service Integration Tests**
+- `glyphenge/` - Link tapestry service & Linktree import tests
+- `babelfish/` - Universal messaging bridge & Matrix integration tests
+- `the-advancement/` - iOS/Android payment flow tests
 
 ## Test Categories
 

@@ -89,7 +89,9 @@ npm run test:continuebee:magic
 ### Run Specialized Tests
 ```bash
 npm run test:sanora:orders        # Sanora orders webpage with AuthTeam
-npm run test:the-advancement      # The Advancement payment flows (NEW)
+npm run test:the-advancement      # The Advancement payment flows
+npm run test:glyphenge            # Glyphenge Linktree import & tapestry creation
+npm run test:babelfish            # Babelfish Matrix messaging bridge (NEW)
 ```
 
 ## MAGIC Spell Testing (October 2025)
@@ -336,6 +338,144 @@ const status = await addie.getPayoutCardStatus();
    - Direct transfers created to Bob and Carl's payout cards
    - Funds arrive in ~30 minutes (instant payout)
 
+## Glyphenge Link Tapestry Tests (January 2025)
+
+Sharon includes comprehensive tests for Glyphenge service - Planet Nine's server-side SVG rendering and link tapestry service.
+
+### Test Coverage
+- **Complete Linktree Import Flow**: Fetch, parse, create tapestry, verify BDO
+- **Emojicode Generation**: 8-emoji identifiers for public BDOs
+- **Alphanumeric URLs**: Browser-friendly `/t/:uuid` paths
+- **SVG Content Validation**: 18KB+ SVG files with proper structure
+- **Cross-Platform Compatibility**: Works across dev/test/local environments
+
+### Running Glyphenge Tests
+
+```bash
+# Local development (default)
+npm run test:glyphenge
+
+# Docker test environment
+npm run test:glyphenge:base1    # Test against Base 1
+npm run test:glyphenge:base2    # Test against Base 2
+npm run test:glyphenge:base3    # Test against Base 3
+```
+
+### What Gets Tested
+
+✅ **Linktree Import**:
+- Fetch https://linktr.ee/thefledgecollective
+- Extract 13 links from __NEXT_DATA__
+- Parse Next.js server-side rendered data
+
+✅ **Tapestry Creation**:
+- POST /create endpoint with link data
+- Server-side SVG generation
+- BDO creation with sessionless keys
+
+✅ **Dual URL Access**:
+- Emojicode URL (`?emojicode=💚☮️💚🏴‍☠️🔨🎹🐢💀💫`)
+- Alphanumeric URL (`/t/020605557178eb64`)
+- Both URLs serve same tapestry
+
+✅ **BDO Integration**:
+- Public BDO with emojicode
+- SVG content storage (18KB+)
+- `/emoji/:emojicode` endpoint
+
+### Test Files
+- **Location**: `/tests/glyphenge/linktree-import.test.js`
+- **Documentation**: `/tests/glyphenge/README.md`
+- **Docker Guide**: `/tests/glyphenge/DOCKER-TESTING.md`
+
+### Requirements
+- Glyphenge service running on port 3010 (or configured via `GLYPHENGE_URL`)
+- BDO service running on port 3003 (or configured via `BDO_BASE_URL`)
+- Internet connection (for Linktree fetch)
+
+## Babelfish Universal Messaging Bridge Tests (January 2025)
+
+Sharon now includes comprehensive tests for Babelfish - Planet Nine's universal messaging bridge that connects Discord, Matrix, SMS, and other platforms.
+
+### Test Coverage
+- **10 Comprehensive Tests**: Service health, bridge creation, statistics, error handling
+- **Matrix-to-Matrix Bridging**: Complete bidirectional message relay
+- **Configuration Validation**: Room IDs, access tokens, homeserver URLs
+- **Statistics Tracking**: Active bridges, processed messages, adapter counts
+- **Error Handling**: Invalid configs, bad credentials, graceful failures
+- **Manual Testing Guide**: Step-by-step message relay instructions
+
+### Running Babelfish Tests
+
+```bash
+# Set Matrix credentials
+export MATRIX_TOKEN_1='syt_YWxpY2U_...'
+export MATRIX_ROOM_1='!abc123:matrix.org'
+export MATRIX_TOKEN_2='syt_Ym9i_...'
+export MATRIX_ROOM_2='!def456:matrix.org'
+
+# Run tests
+npm run test:babelfish
+```
+
+### What Gets Tested
+
+✅ **Service Health**:
+- Babelfish running and responsive
+- Matrix adapter registration
+- Correct version information
+
+✅ **Bridge Creation**:
+- Matrix-to-Matrix bridge setup
+- Configuration validation (2+ platforms required)
+- Matrix client initialization
+- Bridge ID generation
+
+✅ **Statistics Validation**:
+- Active bridge count
+- Registered adapter count
+- Message processing tracking
+
+✅ **Error Handling**:
+- Invalid configurations rejected
+- Bad credentials handled gracefully
+- Server remains stable
+
+✅ **Manual Message Relay** (post-test):
+- Send message in Room 1 → appears in Room 2
+- Message attribution: `[MATRIX] username: text`
+- Bidirectional message flow
+- Real-time Matrix SDK integration
+
+### Test Files
+- **Location**: `/tests/babelfish/matrix-bridge.test.js`
+- **Documentation**: `/tests/babelfish/README.md`
+- **Quick Start**: `/tests/babelfish/QUICKSTART.md`
+- **Summary**: `/tests/babelfish/TEST-SUMMARY.md`
+
+### Requirements
+- **Babelfish service** running on port 3011 with TEST_MODE enabled:
+  ```bash
+  cd /path/to/babelfish
+  TEST_MODE=true npm start
+  ```
+- **Matrix credentials** (two accounts, two rooms):
+  - Access tokens (from Element settings)
+  - Room IDs (from room advanced settings)
+  - Both users invited to both rooms
+  - Encryption turned OFF
+- **Dependencies**: mocha, chai, node-fetch
+
+### Integration with Babelfish
+
+These tests validate the complete Babelfish architecture:
+- **REST API**: Bridge creation, listing, statistics endpoints
+- **Platform Adapters**: Matrix adapter initialization and event handling
+- **Message Router**: Bridge registration and message routing logic
+- **Real-time Messaging**: Matrix SDK integration for live relay
+
+For complete Matrix setup instructions, see `/babelfish/docs/MATRIX-SETUP.md`
+
 ## Test Structure (Updated)
 
 ```
@@ -353,7 +493,9 @@ sharon/
 │   ├── pref/           # Pref service tests + MAGIC spells
 │   ├── aretha/         # Aretha service tests + MAGIC spells
 │   ├── continuebee/    # Continuebee service tests + MAGIC spells
-│   ├── the-advancement/ # The Advancement payment flows (NEW)
+│   ├── the-advancement/ # The Advancement payment flows
+│   ├── glyphenge/      # Glyphenge link tapestry tests
+│   ├── babelfish/      # Babelfish messaging bridge tests (NEW)
 │   ├── magic/          # MAGIC protocol tests
 │   ├── sessionless/    # Sessionless auth tests
 │   └── teleportation/  # Teleportation protocol tests
@@ -365,4 +507,4 @@ sharon/
 ```
 
 ## Last Updated
-November 1, 2025 - Converted The Advancement payment flow tests from Stripe Connected Accounts to direct debit card payouts. Tests now validate instant payout setup (~1 second), payout card validation (debit-only), and direct transfers (~30 minutes). Updated Addie client SDK with `savePayoutCard()` and `getPayoutCardStatus()` methods. Total: 64 spells, 180+ tests across all services and applications.
+January 11, 2025 - Added comprehensive Babelfish universal messaging bridge tests (10 tests for Matrix-to-Matrix bridging), including service health checks, bridge creation, statistics tracking, error handling, and manual testing guide. Created complete test documentation (README.md, QUICKSTART.md, TEST-SUMMARY.md). Tests validate REST API, platform adapters, message router, and real-time Matrix SDK integration. Requires Babelfish running with TEST_MODE and Matrix credentials.
