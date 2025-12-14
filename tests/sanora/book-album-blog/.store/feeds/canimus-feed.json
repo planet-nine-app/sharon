@@ -1,0 +1,114 @@
+{
+  "type": "feed",
+  "name": "AwesomeStore Music",
+  "url": "http://localhost:9090/.store/feeds/canimus-feed.json",
+  "children": [
+    {
+      "type": "artist",
+      "name": "Bury the Needle",
+      "children": [
+        {
+          "type": "album",
+          "name": "Gets Deliciously Sauced",
+          "images": {
+            "cover": {
+              "src": "http://localhost:9090/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/lutz.jpeg"
+            }
+          },
+          "children": [
+            {
+              "type": "track",
+              "name": "Take It Past the Limit",
+              "Artist": "Bury the Needle",
+              "Album": "Gets Deliciously Sauced",
+              "genre": ["Rock"],
+              "track": 1,
+              "url": "http://localhost:9090/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/01%20Take%20It%20Past%20the%20Limit.m4a"
+            },
+            {
+              "type": "track",
+              "name": "Where's My Beer?",
+              "Artist": "Bury the Needle",
+              "Album": "Gets Deliciously Sauced",
+              "genre": ["Rock"],
+              "track": 2,
+              "url": "http://localhost:9090/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/02%20Where's%20My%20Beer_.m4a"
+            },
+            {
+              "type": "track",
+              "name": "Booze Blanket Party",
+              "Artist": "Bury the Needle",
+              "Album": "Gets Deliciously Sauced",
+              "genre": ["Rock"],
+              "track": 3,
+              "url": "http://localhost:9090/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/03%20Booze%20Blanket%20Party.m4a"
+            },
+            {
+              "type": "track",
+              "name": "The Cheaper the Woman, the Classier the Beer",
+              "Artist": "Bury the Needle",
+              "Album": "Gets Deliciously Sauced",
+              "genre": ["Rock"],
+              "track": 4,
+              "url": "http://localhost:9090/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/04%20The%20Cheaper%20the%20Woman,%20the%20Classier%20the%20Beer.m4a"
+            },
+            {
+              "type": "track",
+              "name": "Dunk Tunk",
+              "Artist": "Bury the Needle",
+              "Album": "Gets Deliciously Sauced",
+              "genre": ["Rock"],
+              "track": 5,
+              "url": "http://localhost:9090/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/05%20Dunk%20Tunk.m4a"
+            },
+            {
+              "type": "track",
+              "name": "Smoke 'em If You Got 'em, But We're Fine Drunk",
+              "Artist": "Bury the Needle",
+              "Album": "Gets Deliciously Sauced",
+              "genre": ["Rock"],
+              "track": 6,
+              "url": "http://localhost:9090/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/06%20Smoke%20'em%20If%20You%20Got%20'em,%20But%20We're%20Fine%20Drunk.m4a"
+            },
+            {
+              "type": "track",
+              "name": "Lady Whiskey Blues",
+              "Artist": "Bury the Needle",
+              "Album": "Gets Deliciously Sauced",
+              "genre": ["Blues", "Rock"],
+              "track": 7,
+              "url": "http://localhost:9090/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/07%20Lady%20Whiskey%20Blues.m4a"
+            },
+            {
+              "type": "track",
+              "name": "The Lady's My Ante",
+              "Artist": "Bury the Needle",
+              "Album": "Gets Deliciously Sauced",
+              "genre": ["Rock"],
+              "track": 8,
+              "url": "http://localhost:9090/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/08%20The%20Lady's%20My%20Ante.m4a"
+            },
+            {
+              "type": "track",
+              "name": "I'll See Your Beer and I'll Raise You 15",
+              "Artist": "Bury the Needle",
+              "Album": "Gets Deliciously Sauced",
+              "genre": ["Rock"],
+              "track": 9,
+              "url": "http://localhost:9090/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/09%20I'll%20See%20Your%20Beer%20and%20I'll%20Raise%20You%2015.m4a"
+            },
+            {
+              "type": "track",
+              "name": "Always Drunk",
+              "Artist": "Bury the Needle",
+              "Album": "Gets Deliciously Sauced",
+              "genre": ["Rock"],
+              "track": 10,
+              "url": "http://localhost:9090/Bury%20the%20Needle%20Gets%20Deliciously%20Sauced/10%20Always%20Drunk.m4a"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

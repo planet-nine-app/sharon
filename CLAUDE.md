@@ -506,5 +506,60 @@ sharon/
 └── package.json
 ```
 
+## Sanora Store Testing Tool (November 2025)
+
+Sharon includes a local store testing tool for validating Sanora feed generation and serving.
+
+### Make Store Tool
+- **Location**: `/tests/sanora/make-store.js`
+- **Purpose**: Create local HTTP server serving federated feeds
+- **Dependencies**: `feed-generator` (in Sharon root)
+
+### Usage
+
+```bash
+cd /path/to/your-artifacts
+node /path/to/sharon/tests/sanora/make-store.js "My Bookstore"
+# Visit: http://localhost:8080
+```
+
+### Features
+- ✅ Scans directories for books (.epub, .pdf), music (.mp3, .flac), and blog posts (.md, .html)
+- ✅ Generates Libris, Canimus, and Scribus feeds using Claude AI
+- ✅ Serves feeds at `http://localhost:8080/feeds/`
+- ✅ Beautiful dark-themed landing page
+- ✅ Instant setup for testing Sanora integration
+
+### Feed Generator Tool
+- **Location**: `/feed-generator/`
+- **Purpose**: LLM-powered metadata extraction for feed generation
+- **Uses**: Anthropic Claude API for extracting book/music/post metadata
+
+### Serve Store Tool (November 2025)
+- **Location**: `/tests/sanora/serve-store.js`
+- **Purpose**: Serve existing .store directory without regenerating feeds
+- **Usage**: `node serve-store.js [artifact-path] [--port 8080]`
+- **Features**:
+  - Fast restart without feed regeneration
+  - Static file serving for all artifact types
+  - Nested directory support (for music albums)
+  - CORS headers for cross-origin access
+
+### Wiki Proxy Compatibility
+
+The Sanora store server runs **independently** of the wiki proxy routes:
+- **Store Server**: `http://localhost:8080` (default) - serves static files and feeds
+- **Wiki Proxy**: `http://localhost:5124/plugin/allyabase/sanora/*` - proxies Sanora API calls
+
+Both can run simultaneously:
+- Store server handles: feeds, ebooks, music files, blog posts
+- Wiki proxy handles: Sanora API operations (product management, orders, etc.)
+
+For integrated testing, you can:
+1. Start store server on port 8080: `node serve-store.js ~/my-artifacts`
+2. Start allyabase Docker with wiki proxy: `./spin-up-bases.sh --clean`
+3. Access store at `http://localhost:8080`
+4. Access Sanora API at `http://localhost:5124/plugin/allyabase/sanora/*`
+
 ## Last Updated
-January 11, 2025 - Added comprehensive Babelfish universal messaging bridge tests (10 tests for Matrix-to-Matrix bridging), including service health checks, bridge creation, statistics tracking, error handling, and manual testing guide. Created complete test documentation (README.md, QUICKSTART.md, TEST-SUMMARY.md). Tests validate REST API, platform adapters, message router, and real-time Matrix SDK integration. Requires Babelfish running with TEST_MODE and Matrix credentials.
+November 30, 2025 - Added serve-store.js documentation and wiki proxy compatibility notes. Store server and wiki proxy work independently and can run simultaneously for complete Sanora testing.

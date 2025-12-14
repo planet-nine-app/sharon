@@ -1,0 +1,30 @@
+{
+  "name": "@planet-nine/feed-generator",
+  "version": "1.0.0",
+  "description": "LLM-powered feed generator for digital artifacts (Libris, Scribus, Canimus)",
+  "type": "module",
+  "main": "generate-feed.js",
+  "bin": {
+    "generate-feed": "./generate-feed.js"
+  },
+  "scripts": {
+    "generate": "node generate-feed.js"
+  },
+  "keywords": [
+    "feed",
+    "rss",
+    "books",
+    "blog",
+    "music",
+    "libris",
+    "scribus",
+    "canimus",
+    "llm",
+    "metadata"
+  ],
+  "author": "Planet Nine",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0"
+  }
+}

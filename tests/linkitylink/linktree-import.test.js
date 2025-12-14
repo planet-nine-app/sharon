@@ -2,11 +2,11 @@ import { expect } from 'chai';
 import fetch from 'node-fetch';
 
 // Test configuration
-const GLYPHENGE_URL = process.env.GLYPHENGE_URL || 'http://localhost:3010';
+const LINKITYLINK_URL = process.env.LINKITYLINK_URL || 'http://localhost:3010';
 const BDO_BASE_URL = process.env.BDO_BASE_URL || 'http://localhost:3003';
 const LINKTREE_URL = 'https://linktr.ee/thefledgecollective';
 
-describe('Glyphenge - Linktree Import', function() {
+describe('Linkitylink - Linktree Import', function() {
   this.timeout(30000); // Allow time for fetching Linktree
 
   let linktreeData;
@@ -88,9 +88,9 @@ describe('Glyphenge - Linktree Import', function() {
         sourceUrl: LINKTREE_URL
       };
 
-      console.log(`📤 Sending ${links.length} links to Glyphenge...`);
+      console.log(`📤 Sending ${links.length} links to Linkitylink...`);
 
-      const response = await fetch(`${GLYPHENGE_URL}/create`, {
+      const response = await fetch(`${LINKITYLINK_URL}/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -106,7 +106,7 @@ describe('Glyphenge - Linktree Import', function() {
       expect(result.success).to.be.true;
 
       tapestryResult = result;
-      console.log(`✅ Glyphenge responded successfully`);
+      console.log(`✅ Linkitylink responded successfully`);
     });
 
     it('should return a valid emojicode', function() {
@@ -143,9 +143,9 @@ describe('Glyphenge - Linktree Import', function() {
       expect(tapestryResult).to.have.property('pubKey');
 
       // Construct URLs client-side using environment variables
-      const emojicodeUrl = `${GLYPHENGE_URL}?emojicode=${encodeURIComponent(tapestryResult.emojicode)}`;
+      const emojicodeUrl = `${LINKITYLINK_URL}?emojicode=${encodeURIComponent(tapestryResult.emojicode)}`;
       const alphanumericIdentifier = tapestryResult.pubKey.substring(0, 16);
-      const alphanumericUrl = `${GLYPHENGE_URL}/t/${alphanumericIdentifier}`;
+      const alphanumericUrl = `${LINKITYLINK_URL}/t/${alphanumericIdentifier}`;
       const bdoUrl = `${BDO_BASE_URL}/emoji/${encodeURIComponent(tapestryResult.emojicode)}`;
 
       // Store constructed URLs for later tests
@@ -154,8 +154,8 @@ describe('Glyphenge - Linktree Import', function() {
       tapestryResult.bdoUrl = bdoUrl;
 
       // Verify URLs use correct base URLs (port consistency)
-      expect(emojicodeUrl).to.include(GLYPHENGE_URL);
-      expect(alphanumericUrl).to.include(GLYPHENGE_URL);
+      expect(emojicodeUrl).to.include(LINKITYLINK_URL);
+      expect(alphanumericUrl).to.include(LINKITYLINK_URL);
       expect(bdoUrl).to.include(BDO_BASE_URL);
 
       console.log(`✅ Client-side URL construction successful`);
@@ -200,7 +200,7 @@ describe('Glyphenge - Linktree Import', function() {
       expect(tapestryResult).to.exist;
       expect(tapestryResult).to.have.property('emojicodeUrl');
 
-      console.log(`🌐 Checking Glyphenge display: ${tapestryResult.emojicodeUrl}`);
+      console.log(`🌐 Checking Linkitylink display: ${tapestryResult.emojicodeUrl}`);
 
       const response = await fetch(tapestryResult.emojicodeUrl);
       expect(response.ok).to.be.true;

@@ -1,0 +1,49 @@
+{
+  "type": "feed",
+  "name": "AwesomeStore Blog",
+  "url": "https://example.com/scribus.json",
+  "links": [
+    {
+      "rel": "self",
+      "type": "application/json",
+      "href": "https://example.com/scribus.json"
+    },
+    {
+      "rel": "current",
+      "type": "application/json",
+      "href": "https://example.com/scribus.json"
+    }
+  ],
+  "items": [
+    {
+      "type": "post",
+      "title": "Posts",
+      "subtitle": "",
+      "author": {
+        "name": ""
+      },
+      "summary": "",
+      "published-date": "",
+      "categories": [],
+      "tags": [],
+      "word-count": 0,
+      "language": "en",
+      "url": "http://localhost:8080/posts/_index.md"
+    },
+    {
+      "type": "post",
+      "title": "Part 9 - Are you entertained?",
+      "subtitle": null,
+      "author": {
+        "name": null
+      },
+      "summary": "A historical exploration of television's invention and the impact of World War II advertising, from the first TV ad in 1941 to the post-war advertising boom.",
+      "published-date": "2025-02-02T00:00:00Z",
+      "categories": [],
+      "tags": [],
+      "word-count": 350,
+      "language": "en",
+      "url": "http://localhost:8080/posts/index.md"
+    }
+  ]
+}

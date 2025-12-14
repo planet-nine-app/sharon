@@ -10,6 +10,7 @@ import { expect } from 'chai';
 import fetch from 'node-fetch';
 import fs from 'fs/promises';
 import path from 'path';
+import sessionless from 'sessionless-node';
 
 const BDO_BASE_URL = process.env.BDO_BASE_URL || 'http://localhost:3003';
 const LINKITYLINK_BASE_URL = process.env.LINKITYLINK_BASE_URL || 'http://localhost:3010';
@@ -20,11 +21,31 @@ describe('Linkitylink Template Federation', function() {
 
   let testTemplateEmojicode;
   let testPubKey;
+  let testKeys;
+
+  // Generate test keys
+  before(async () => {
+    const saveKeys = (keys) => { testKeys = keys; };
+    const getKeys = () => testKeys;
+    testKeys = await sessionless.generateKeys(saveKeys, getKeys);
+    console.log(`🔑 Generated test keys: ${testKeys.pubKey.substring(0, 16)}...`);
+  });
 
   describe('Template Submission and Indexing', () => {
 
     it('should submit a template via MAGIC spell', async () => {
-      const spellPayload = {
+      // Create caster authentication
+      const timestamp = Date.now().toString();
+      const message = timestamp + testKeys.pubKey;
+      const signature = await sessionless.sign(message, testKeys.privateKey);
+
+      const caster = {
+        pubKey: testKeys.pubKey,
+        timestamp: timestamp,
+        signature: signature
+      };
+
+      const payload = {
         paymentMethod: 'mp',
         template: {
           name: 'Test Federation Template',
@@ -34,10 +55,10 @@ describe('Linkitylink Template Federation', function() {
         payeeQuadEmojicode: '🔗💎🌟🎨🐉📌🌍🔑'
       };
 
-      const response = await fetch(`${FOUNT_BASE_URL}/magic/spell/submitLinkitylinkTemplate`, {
+      const response = await fetch(`${LINKITYLINK_BASE_URL}/magic/spell/submitLinkitylinkTemplate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(spellPayload)
+        body: JSON.stringify({ caster, payload })
       });
 
       const result = await response.json();

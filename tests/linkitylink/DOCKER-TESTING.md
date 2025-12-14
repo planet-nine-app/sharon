@@ -1,4 +1,4 @@
-# Glyphenge Docker Testing Guide
+# Linkitylink Docker Testing Guide
 
 ## Quick Start
 
@@ -9,10 +9,10 @@ cd allyabase/deployment/docker
 ./build-flexible.sh && ./spin-up-bases.sh && node seed-ecosystem.js && node seed-sanora.js
 ```
 
-### 2. Start Glyphenge Service
+### 2. Start Linkitylink Service
 
 ```bash
-cd the-advancement/glyphenge
+cd linkitylink
 ./start-for-docker-tests.sh
 ```
 
@@ -22,15 +22,15 @@ PORT=5125 BDO_BASE_URL=http://localhost:5114 node server.js
 ```
 
 **Important**:
-- **Clients construct URLs** (Glyphenge returns only identifiers)
+- **Clients construct URLs** (Linkitylink returns only identifiers)
 - **Server fetches BDOs** (needs `BDO_BASE_URL` set to Docker port 5114)
 - **Default BDO URL** is `http://localhost:3003` (local dev), must override for Docker
 
-### 3. Run Glyphenge Test
+### 3. Run Linkitylink Test
 
 ```bash
 cd sharon
-npm run test:glyphenge:base1
+npm run test:linkitylink:base1
 ```
 
 ## What Gets Tested
@@ -38,7 +38,7 @@ npm run test:glyphenge:base1
 ✅ **Complete Linktree Import Flow**:
 1. Fetches https://linktr.ee/thefledgecollective
 2. Extracts 13 links from __NEXT_DATA__
-3. Creates Glyphenge tapestry via POST /create
+3. Creates Linkitylink tapestry via POST /create
 4. Verifies emojicode generation
 5. Verifies alphanumeric URL generation (/t/:uuid)
 6. Confirms port consistency (uses configured base URLs)
@@ -50,18 +50,18 @@ npm run test:glyphenge:base1
 
 ```bash
 # Test against Base 1 (ports 5114, 5125)
-npm run test:glyphenge:base1
+npm run test:linkitylink:base1
 
 # Test against Base 2 (ports 5214, 5225)
-npm run test:glyphenge:base2
+npm run test:linkitylink:base2
 
 # Test against Base 3 (ports 5314, 5325)
-npm run test:glyphenge:base3
+npm run test:linkitylink:base3
 ```
 
 ## Port Mappings
 
-| Base | BDO Service | Glyphenge |
+| Base | BDO Service | Linkitylink |
 |------|-------------|-----------|
 | 1    | http://localhost:5114 | http://localhost:5125 |
 | 2    | http://localhost:5214 | http://localhost:5225 |
@@ -70,12 +70,12 @@ npm run test:glyphenge:base3
 ## Expected Output
 
 ```
-Glyphenge - Linktree Import
+Linkitylink - Linktree Import
   1. Fetch and Parse Linktree
     ✔ should fetch the Linktree page
     ✔ should extract links from __NEXT_DATA__
-  2. Create Tapestry via Glyphenge
-    ✔ should call Glyphenge POST /create endpoint
+  2. Create Tapestry via Linkitylink
+    ✔ should call Linkitylink POST /create endpoint
     ✔ should return a valid emojicode
     ✔ should return BDO metadata
     ✔ should construct URLs from identifiers (client-side)
@@ -115,10 +115,10 @@ BDO: http://localhost:5114/emoji/...
 
 ## Architecture Validation
 
-This test validates the **Glyphenge server-side rendering architecture**:
+This test validates the **Linkitylink server-side rendering architecture**:
 
 1. **Thin Clients**: Clients send raw link data only
-2. **Server-Side SVG**: Glyphenge generates all SVG templates
+2. **Server-Side SVG**: Linkitylink generates all SVG templates
 3. **BDO Integration**: Automatic public BDO creation with emojicodes
 4. **Consistent Rendering**: Same templates across all platforms
 
@@ -132,7 +132,7 @@ This is the same architecture used by:
 If automated tests fail, you can manually verify:
 
 ```bash
-# 1. Check Glyphenge is running
+# 1. Check Linkitylink is running
 curl http://localhost:5125
 
 # 2. Create test tapestry
@@ -150,7 +150,7 @@ curl http://localhost:5114/emoji/💚☮️💚🏴‍☠️🔨🎹🐢💀💫
 ## Related Documentation
 
 - **Test README**: `./README.md` - Complete test documentation
-- **Glyphenge Service**: `/the-advancement/glyphenge/README.md`
+- **Linkitylink Service**: `/linkitylink/CLAUDE.md`
 - **Docker Setup**: `/allyabase/deployment/docker/README.md`
 - **BDO Emojicodes**: `/the-advancement/CLAUDE.md`
 

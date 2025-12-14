@@ -33,15 +33,15 @@ services:
       test: ["CMD", "curl", "-s", "http://localhost:3002/"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 60s
+      retries: 5
+      start_period: 120s
 
   # Nginx proxy for route-based forwarding
   nginx:
     image: nginx:alpine
     depends_on:
       allyabase:
-        condition: service_healthy
+        condition: service_started
     volumes:
       - ./nginx-path-based-test.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx-test.conf:/etc/nginx/nginx.conf:ro

@@ -1,0 +1,56 @@
+{
+  "type": "feed",
+  "name": "AwesomeStore Books",
+  "url": "https://example.com/libris.json",
+  "links": [
+    {
+      "rel": "self",
+      "type": "application/json",
+      "href": "https://example.com/libris.json"
+    },
+    {
+      "rel": "current",
+      "type": "application/json",
+      "href": "https://example.com/libris.json"
+    }
+  ],
+  "items": [
+    {
+      "type": "book",
+      "name": "A Brief History of Teleportation",
+      "subtitle": null,
+      "author": {
+        "name": "Unknown"
+      },
+      "summary": "Unable to extract metadata from binary file",
+      "genre": [],
+      "language": "en",
+      "isbn": null,
+      "release-date": null,
+      "url": "http://localhost:8080/books/A Brief History of Teleportation.epub"
+    },
+    {
+      "type": "book",
+      "name": "A Brief History of Teleportation",
+      "subtitle": null,
+      "author": {
+        "name": "Unknown"
+      },
+      "summary": "Unable to extract from binary file",
+      "genre": [],
+      "language": "en",
+      "isbn": null,
+      "release-date": null,
+      "url": "http://localhost:8080/books/A Brief History of Teleportation.mobi"
+    },
+    {
+      "type": "book",
+      "name": "A Brief History of Teleportation",
+      "author": {
+        "name": "Unknown"
+      },
+      "language": "en",
+      "url": "http://localhost:8080/books/A Brief History of Teleportation.pdf"
+    }
+  ]
+}
