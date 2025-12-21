@@ -66,13 +66,9 @@ cd /path/to/allyabase/deployment/docker
 ./spin-up-bases.sh --bases=1
 ```
 
-2. **Start Sawyer** (pointing to Docker services):
+2. **Start Sawyer**:
 ```bash
 cd /path/to/sawyer
-BDO_BASE_URL=http://localhost:5112 \
-SANORA_BASE_URL=http://localhost:5124 \
-FOUNT_BASE_URL=http://localhost:5115 \
-MINNIE_BASE_URL=http://localhost:5125 \
 npm start
 ```
 
@@ -82,37 +78,35 @@ cd /path/to/sharon
 npm run test:sawyer
 ```
 
-Tests automatically use Docker services:
-- BDO: `http://localhost:5112` (Base 1)
-- Sanora: `http://localhost:5124` (Base 1)
-- Fount: `http://localhost:5115` (Base 1)
-- Minnie: `http://localhost:5125` (Base 1)
+Tests automatically use Docker proxy (Base 1 on port 5124):
+- All services accessed via `/plugin/allyabase/{service}` paths
+- BDO: `http://localhost:5124/plugin/allyabase/bdo`
+- Sanora: `http://localhost:5124/plugin/allyabase/sanora`
+- Fount: `http://localhost:5124/plugin/allyabase/fount`
+- Minnie: `http://localhost:5124/plugin/allyabase/minnie`
+
+To use a different base or proxy port:
+```bash
+PROXY_BASE_URL=http://localhost:5224 npm run test:sawyer  # Use Base 2
+```
 
 ## Requirements
 
 ### Docker Services (Recommended)
-Tests use Docker allyabase services by default:
-- **BDO** on port 5112 (Base 1)
-- **Sanora** on port 5124 (Base 1) - provides real class data
-- **Fount** on port 5115 (Base 1) - for admin verification
-- **Minnie** on port 5125 (Base 1) - for email blasts
+Tests use Docker allyabase proxy to access all services:
+- **Proxy** on port 5124 (Base 1) - routes to all services
+- **BDO** - accessed via `/plugin/allyabase/bdo`
+- **Sanora** - accessed via `/plugin/allyabase/sanora` (provides real class data)
+- **Fount** - accessed via `/plugin/allyabase/fount` (for admin verification)
+- **Minnie** - accessed via `/plugin/allyabase/minnie` (for email blasts)
 
-Start with:
+Start Docker with proxy:
 ```bash
 cd /path/to/allyabase/deployment/docker
 ./spin-up-bases.sh --bases=1
 ```
 
-### Sawyer Configuration
-Point Sawyer to Docker services (no mock data needed):
-```bash
-cd /path/to/sawyer
-BDO_BASE_URL=http://localhost:5112 \
-SANORA_BASE_URL=http://localhost:5124 \
-FOUNT_BASE_URL=http://localhost:5115 \
-MINNIE_BASE_URL=http://localhost:5125 \
-npm start
-```
+The proxy automatically starts on port 5124 and routes wiki-style paths to services.
 
 ### Data Source
 Tests use **real Sanora product data** from the Docker environment - no mocks!

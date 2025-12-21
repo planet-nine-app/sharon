@@ -17,7 +17,9 @@ import fetch from 'node-fetch';
  * Usage: npm test tests/sanora/orders-webpage.test.js
  */
 
-const SANORA_URL = process.env.SANORA_URL || 'http://127.0.0.1:7243';
+// Proxy configuration - routes wiki-style paths to services
+const PROXY_BASE = process.env.PROXY_BASE_URL || 'http://localhost:5124';
+const SANORA_URL = process.env.SANORA_URL || `${PROXY_BASE}/plugin/allyabase/sanora`;
 
 // Helper to extract cookies from response headers
 const extractCookies = (response) => {

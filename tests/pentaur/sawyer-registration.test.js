@@ -4,7 +4,7 @@ import sessionless from 'sessionless-node';
 import fetch from 'node-fetch';
 
 /**
- * Sawyer Camp Registration Service Tests
+ * Pentaur Camp Registration Service Tests
  *
  * Tests the complete camp registration workflow:
  * 1. Health check and service availability
@@ -15,15 +15,18 @@ import fetch from 'node-fetch';
  * 6. Roster management
  * 7. Communication blasts
  *
- * Usage: npm run test:sawyer
+ * Usage: npm run test:pentaur
  */
 
-// Use Docker allyabase services by default
+// Proxy configuration - routes wiki-style paths to services
+const PROXY_BASE = process.env.PROXY_BASE_URL || 'http://localhost:5124';
+
+// Service URLs using proxy paths (works with both Docker proxy and wiki plugin)
 const SAWYER_URL = process.env.SAWYER_URL || 'http://localhost:3013';
-const BDO_URL = process.env.BDO_BASE_URL || 'http://localhost:5112'; // Base 1 in Docker
-const SANORA_URL = process.env.SANORA_BASE_URL || 'http://localhost:5124'; // Base 1 in Docker
-const FOUNT_URL = process.env.FOUNT_BASE_URL || 'http://localhost:5115'; // Base 1 in Docker
-const MINNIE_URL = process.env.MINNIE_BASE_URL || 'http://localhost:5125'; // Base 1 in Docker
+const BDO_URL = process.env.BDO_BASE_URL || `${PROXY_BASE}/plugin/allyabase/bdo`;
+const SANORA_URL = process.env.SANORA_BASE_URL || `${PROXY_BASE}/plugin/allyabase/sanora`;
+const FOUNT_URL = process.env.FOUNT_BASE_URL || `${PROXY_BASE}/plugin/allyabase/fount`;
+const MINNIE_URL = process.env.MINNIE_BASE_URL || `${PROXY_BASE}/plugin/allyabase/minnie`;
 
 // Test data - will fetch real class ID from Sanora
 let testRegistration = {
@@ -62,7 +65,7 @@ let testRegistration = {
 
 let documentKeys = {};
 
-describe('Sawyer Camp Registration Service Tests', () => {
+describe('Pentaur Camp Registration Service Tests', () => {
 
   describe('Service Health', () => {
     it('should respond to health check', async function() {
@@ -72,11 +75,11 @@ describe('Sawyer Camp Registration Service Tests', () => {
       response.status.should.equal(200);
 
       const data = await response.json();
-      data.should.have.property('service', 'sawyer');
+      data.should.have.property('service', 'pentaur');
       data.should.have.property('status', 'ok');
       data.should.have.property('version');
 
-      console.log(`✅ Sawyer service healthy (v${data.version})`);
+      console.log(`✅ Pentaur service healthy (v${data.version})`);
     });
 
     it('should serve static files', async () => {
