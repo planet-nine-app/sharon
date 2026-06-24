@@ -43,7 +43,6 @@ const getServiceURLs = (env) => {
     return {
       fount: 'http://127.0.0.1:5117/',
       bdo: 'http://127.0.0.1:5114/',
-      covenant: 'http://127.0.0.1:5122/',
       addie: 'http://127.0.0.1:5116/'
     };
   } else if (env === 'test') {
@@ -51,7 +50,6 @@ const getServiceURLs = (env) => {
     return {
       fount: 'http://127.0.0.1:5117/',
       bdo: 'http://127.0.0.1:5114/',
-      covenant: 'http://127.0.0.1:5122/',
       addie: 'http://127.0.0.1:5116/'
     };
   } else {
@@ -59,7 +57,6 @@ const getServiceURLs = (env) => {
     return {
       fount: `https://${env}.fount.allyabase.com/`,
       bdo: `https://${env}.bdo.allyabase.com/`,
-      covenant: `https://${env}.covenant.allyabase.com/`,
       addie: `https://${env}.addie.allyabase.com/`
     };
   }
@@ -70,7 +67,6 @@ const SERVICES = getServiceURLs(ENVIRONMENT);
 // Service URLs (allow env var overrides)
 fount.baseURL = process.env.FOUNT_URL || SERVICES.fount;
 bdo.baseURL = process.env.BDO_URL || SERVICES.bdo;
-const COVENANT_URL = process.env.COVENANT_URL || SERVICES.covenant;
 addie.baseURL = process.env.ADDIE_URL || SERVICES.addie;
 
 console.log(`🔗 Service URLs:`);
@@ -188,8 +184,6 @@ const magic = {
   }
 };
 
-// Helper for covenant (until covenant-js exists)
-const covenant = {
   signStep: async (contractUuid, stepId, signature) => {
     const response = await fetch(`${COVENANT_URL}contract/${contractUuid}/sign`, {
       method: 'PUT',
@@ -573,12 +567,10 @@ describe('Lesson Purchase Flow', () => {
       const getSpellURLs = (env) => {
         if (env === 'local' || env === 'test') {
           return {
-            covenant: 'http://localhost:5122/magic/spell/',
             fount: 'http://localhost:5117/resolve/'
           };
         } else {
           return {
-            covenant: `https://${env}.covenant.allyabase.com/magic/spell/`,
             fount: `https://${env}.fount.allyabase.com/resolve/`
           };
         }
@@ -588,7 +580,6 @@ describe('Lesson Purchase Flow', () => {
       const purchaseLessonDefinition = {
         cost: 0,
         destinations: [
-          { stopName: 'covenant', stopURL: spellURLs.covenant },
           { stopName: 'fount', stopURL: spellURLs.fount }
         ],
         resolver: 'fount',
@@ -752,7 +743,6 @@ describe('Lesson Purchase Flow', () => {
         const stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
         const stepSignature = await signWithKey(stepMessage, teacher.keys);
 
-        await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
           timestamp,
           userUUID: teacher.user.uuid,
@@ -885,7 +875,6 @@ describe('Lesson Purchase Flow', () => {
         let stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
         let stepSignature = await signWithKey(stepMessage, teacher.keys);
 
-        await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
           timestamp,
           userUUID: teacher.user.uuid,
@@ -903,7 +892,6 @@ describe('Lesson Purchase Flow', () => {
         stepMessage = timestamp + student.user.uuid + purchaseContract.uuid + stepId;
         stepSignature = await signWithKey(stepMessage, student.keys);
 
-        await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
           timestamp,
           userUUID: student.user.uuid,
@@ -982,7 +970,6 @@ describe('Lesson Purchase Flow', () => {
         let stepMessage = timestamp + student.user.uuid + purchaseContract.uuid + stepId;
         let stepSignature = await signWithKey(stepMessage, student.keys);
 
-        await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
           timestamp,
           userUUID: student.user.uuid,
@@ -1000,7 +987,6 @@ describe('Lesson Purchase Flow', () => {
         stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
         stepSignature = await signWithKey(stepMessage, teacher.keys);
 
-        await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
           timestamp,
           userUUID: teacher.user.uuid,
@@ -1079,7 +1065,6 @@ describe('Lesson Purchase Flow', () => {
         let stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
         let stepSignature = await signWithKey(stepMessage, teacher.keys);
 
-        await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
           timestamp,
           userUUID: teacher.user.uuid,
@@ -1097,7 +1082,6 @@ describe('Lesson Purchase Flow', () => {
         stepMessage = timestamp + student.user.uuid + purchaseContract.uuid + stepId;
         stepSignature = await signWithKey(stepMessage, student.keys);
 
-        await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
           timestamp,
           userUUID: student.user.uuid,
@@ -1196,7 +1180,6 @@ describe('Lesson Purchase Flow', () => {
         let stepMessage = timestamp + teacher.user.uuid + purchaseContract.uuid + stepId;
         let stepSignature = await signWithKey(stepMessage, teacher.keys);
 
-        await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
           timestamp,
           userUUID: teacher.user.uuid,
@@ -1214,7 +1197,6 @@ describe('Lesson Purchase Flow', () => {
         stepMessage = timestamp + student.user.uuid + purchaseContract.uuid + stepId;
         stepSignature = await signWithKey(stepMessage, student.keys);
 
-        await covenant.signStep(purchaseContract.uuid, stepId, {
           signature,
           timestamp,
           userUUID: student.user.uuid,

@@ -67,7 +67,6 @@ The `tests/` directory is organized by test categories:
 - `julia/` - P2P messaging & key coordination tests
 - `sanora/` - Product hosting & marketplace tests
 - `dolores/` - Social feeds & media tests
-- `covenant/` - Multi-party contract tests
 - Plus: `aretha/`, `pref/`, `continuebee/`, `joan/`
 
 ### **Protocol Tests**

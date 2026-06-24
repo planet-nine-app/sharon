@@ -11,7 +11,6 @@ const path = require('path');
 const fs = require('fs');
 
 const PROTOCOL_CATEGORIES = [
-  'sessionless', 'magic', 'teleportation', 'covenant'
 ];
 
 async function runProtocolTests() {

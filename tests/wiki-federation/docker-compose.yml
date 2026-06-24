@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # Wiki Node A - "Alice's Wiki"
+  wiki-alice:
+    build:
+      context: .
+      dockerfile: Dockerfile.wiki
+    image: wiki-federation:latest
+    container_name: wiki-alice
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./data/alice:/home/node/.wiki/alice.localhost
+    environment:
+      - wiki_port=3000
+      - wiki_farm=true
+      - wiki_autoseed=true
+      - wiki_security_type=friends
+      - wiki_admin=planetnine-admin-secret-2024
+    networks:
+      - wiki-federation
+
+  # Wiki Node B - "Bob's Wiki"
+  wiki-bob:
+    build:
+      context: .
+      dockerfile: Dockerfile.wiki
+    image: wiki-federation:latest
+    container_name: wiki-bob
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./data/bob:/home/node/.wiki/bob.localhost
+    environment:
+      - wiki_port=3000
+      - wiki_farm=true
+      - wiki_autoseed=true
+      - wiki_security_type=friends
+      - wiki_admin=planetnine-admin-secret-2024
+    networks:
+      - wiki-federation
+
+  # Wiki Node C - "Carol's Wiki"
+  wiki-carol:
+    build:
+      context: .
+      dockerfile: Dockerfile.wiki
+    image: wiki-federation:latest
+    container_name: wiki-carol
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./data/carol:/home/node/.wiki/carol.localhost
+    environment:
+      - wiki_port=3000
+      - wiki_farm=true
+      - wiki_autoseed=true
+      - wiki_security_type=friends
+      - wiki_admin=planetnine-admin-secret-2024
+    networks:
+      - wiki-federation
+
+  # Wiki Node D - "Dave's Wiki" (Standalone with sessionless security)
+  wiki-dave:
+    build:
+      context: .
+      dockerfile: Dockerfile.wiki-standalone
+    image: wiki-standalone:latest
+    container_name: wiki-dave
+    ports:
+      - "3004:3000"
+    volumes:
+      - ./data/dave:/home/node/.wiki
+    environment:
+      - wiki_port=3000
+      - wiki_autoseed=true
+      - wiki_security_type=sessionless
+      - NODE_PATH=/usr/local/lib/node_modules
+    networks:
+      - wiki-federation
+
+  # Shared Sanora backend for all wikis
+  sanora:
+    image: node:18
+    container_name: wiki-federation-sanora
+    ports:
+      - "7243:7243"
+    volumes:
+      - ../../sanora:/app
+    working_dir: /app
+    command: npm start
+    networks:
+      - wiki-federation
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:7243/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  wiki-federation:
+    driver: bridge

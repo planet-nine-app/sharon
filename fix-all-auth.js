@@ -31,7 +31,6 @@ export const TEST_USERS = {
   }
 };`;
 
-const SERVICES = ['julia', 'dolores', 'sanora', 'addie', 'covenant'];
 
 async function fixService(service) {
   const testDir = `/sharon/tests/${service}/mocha`;

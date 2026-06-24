@@ -8,7 +8,6 @@ Individual service tests that verify server/client SDK contracts:
 - **addie** - Payment processing service tests
 - **bdo** - Big Dumb Object storage tests
 - **continuebee** - Client state verification tests
-- **covenant** - Multi-party contract tests
 - **dolores** - Social feeds & media tests
 - **fount** - MAGIC protocol & nineum management tests
 - **joan** - Recovery service tests
@@ -23,7 +22,6 @@ Core protocol integration tests:
 - **sessionless** - Passwordless authentication tests
 - **magic** - Multi-device consensus protocol tests
 - **teleportation** - Content discovery & verification tests
-- **covenant** - Contract management protocol tests
 
 ## System Tests
 Higher-level system integration tests:

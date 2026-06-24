@@ -92,24 +92,27 @@ PROXY_BASE_URL=http://localhost:5224 npm run test:sawyer  # Use Base 2
 
 ## Requirements
 
-### Docker Services (Recommended)
-Tests use Docker allyabase proxy to access all services:
-- **Proxy** on port 5124 (Base 1) - routes to all services
-- **BDO** - accessed via `/plugin/allyabase/bdo`
-- **Sanora** - accessed via `/plugin/allyabase/sanora` (provides real class data)
-- **Fount** - accessed via `/plugin/allyabase/fount` (for admin verification)
-- **Minnie** - accessed via `/plugin/allyabase/minnie` (for email blasts)
+### Docker Services (**REQUIRED**)
 
-Start Docker with proxy:
+⚠️ **NO MOCKING POLICY**: Pentaur follows Planet Nine's central development commandment - no mocking in code. Tests **must** have real services running or they will fail with clear error messages.
+
+Tests require Docker allyabase proxy to access all services:
+- **Proxy** on port 5126 (Base 1) - routes to all services
+- **BDO** - accessed via `/plugin/allyabase/bdo` (storage)
+- **Sanora** - accessed via `/plugin/allyabase/sanora` (class data)
+- **Fount** - accessed via `/plugin/allyabase/fount` (admin verification)
+- **Minnie** - accessed via `/plugin/allyabase/minnie` (email blasts)
+
+**Start Docker services before running tests**:
 ```bash
 cd /path/to/allyabase/deployment/docker
 ./spin-up-bases.sh --bases=1
 ```
 
-The proxy automatically starts on port 5124 and routes wiki-style paths to services.
+The proxy automatically starts on port 5126 and routes wiki-style paths to services.
 
 ### Data Source
-Tests use **real Sanora product data** from the Docker environment - no mocks!
+Tests use **real Sanora product data** from the Docker environment. If services are unavailable, tests will fail with 503 errors indicating exactly which service is missing and how to start it.
 
 ## Test Flow
 
@@ -213,14 +216,36 @@ Sawyer Camp Registration Service Tests
 
 ## Troubleshooting
 
+### Tests Failing with 503 Service Unavailable Errors
+This is the expected behavior when Docker services aren't running. The error message will tell you:
+- **Which service is missing** (Sanora, BDO, Minnie, or Fount)
+- **The exact URL** where it's trying to connect
+- **How to fix it**: Start Docker allyabase services
+
+**Example error**:
+```json
+{
+  "success": false,
+  "error": "Sanora service unavailable",
+  "details": "Cannot connect to Sanora at http://localhost:5126/plugin/allyabase/sanora. Please ensure Docker allyabase services are running.",
+  "serviceUrl": "http://localhost:5126/plugin/allyabase/sanora"
+}
+```
+
+**Solution**:
+```bash
+cd /path/to/allyabase/deployment/docker
+./spin-up-bases.sh --bases=1
+```
+
 ### Tests Failing with Connection Errors
-- Verify Sawyer is running: `curl http://localhost:3013/health`
-- Check Sawyer logs for errors
-- Ensure USE_MOCK_CLASSES=true is set
+- Verify Pentaur is running: `curl http://localhost:3013/health`
+- Check Pentaur logs for startup errors
+- Ensure port 3013 is not in use by another process
 
 ### Registration Tests Failing
-- Verify BDO is running: `curl http://localhost:3003/health`
-- Check BDO has write permissions
+- Verify Docker allyabase is running (see above)
+- Check BDO service is accessible via proxy
 - Verify sessionless-node dependency is installed
 
 ### Document Signing Tests Failing

@@ -41,7 +41,6 @@ const SERVICE_PORT_OFFSETS = {
   minnie: 19,
   aretha: 20,
   sanora: 21,
-  covenant: 22,
   wiki: 24,
   glyphenge: 25,
   linkitylink: 25
@@ -96,9 +95,7 @@ export const serviceConfig = {
     description: 'Payment processing'
   },
 
-  covenant: {
     name: 'Covenant',
-    url: `${BASE_URL}/covenant`,
     directPort: 3011,
     description: 'Multi-party contracts'
   },

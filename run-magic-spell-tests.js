@@ -24,7 +24,6 @@ const MAGIC_SPELL_TESTS = [
   { service: 'dolores', path: 'tests/dolores/magic-spells.js' },
   { service: 'sanora', path: 'tests/sanora/magic-spells.js' },
   { service: 'addie', path: 'tests/addie/magic-spells.js' },
-  { service: 'covenant', path: 'tests/covenant/magic-spells.js' },
   { service: 'prof', path: 'tests/prof/magic-spells.js' },
   { service: 'fount', path: 'tests/fount/mocha/magic-spells.js' }
 ];

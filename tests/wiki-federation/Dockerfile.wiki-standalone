@@ -1,0 +1,24 @@
+# Standalone wiki with sessionless security
+FROM dobbs/farm:latest
+
+# Switch to root for npm install
+USER root
+
+# Install wiki-security-sessionless locally in the wiki directory
+WORKDIR /home/node/lib/node_modules/wiki
+RUN npm install wiki-security-sessionless
+
+# Fix ownership so node user can install more packages via plugmatic
+# Need to own both the wiki directory and node_modules for npm to work
+RUN chown -R node:node /home/node/lib/node_modules/wiki
+
+# Switch back to node user for runtime
+USER node
+
+WORKDIR /home/node/.wiki
+
+# Expose wiki port
+EXPOSE 3000
+
+# Start wiki in standalone mode with sessionless security
+CMD ["wiki", "--autoseed", "--security_type=sessionless"]

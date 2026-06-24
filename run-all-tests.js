@@ -54,7 +54,6 @@ const TEST_CATEGORIES = [
   {
     name: 'Service Tests',
     color: COLORS.BLUE,
-    categories: ['fount', 'bdo', 'julia', 'addie', 'sanora', 'dolores', 'covenant'],
     description: 'Individual microservice tests'
   },
   {

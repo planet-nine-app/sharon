@@ -5,7 +5,6 @@
 
 echo "🚚 Migrating Planet Nine service tests to Sharon..."
 
-SERVICES=("bdo" "julia" "addie" "sanora" "dolores" "covenant" "aretha" "pref" "continuebee" "joan")
 
 for service in "${SERVICES[@]}"; do
     echo "Migrating ${service} tests..."

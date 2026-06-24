@@ -343,7 +343,6 @@ function translateAllyabaseProtocol(url) {
     'dolores': '3007',
     'minnie': '2525',
     'aretha': '7277',
-    'covenant': '3011'
   };
 
   // Extract service name from URL (e.g., allyabase://sanora/path -> sanora)

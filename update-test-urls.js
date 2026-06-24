@@ -25,7 +25,6 @@ const servicePortMap = {
   '3008': 'prof',          // prof
   '3009': 'minnie',        // minnie
   '3010': 'aretha',        // aretha
-  '3011': 'covenant',      // covenant
   '7243': 'sanora',        // sanora
   '7277': 'sanora'         // sanora admin
 };

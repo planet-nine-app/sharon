@@ -12,7 +12,6 @@ const fs = require('fs');
 
 const SERVICE_CATEGORIES = [
   'addie', 'bdo', 'continuebee', 'dolores', 'fount',
-  'joan', 'julia', 'pn-pref', 'sanora', 'covenant', 'aretha'
 ];
 
 async function runServiceTests() {

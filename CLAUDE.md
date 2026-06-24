@@ -27,7 +27,6 @@ sharon/
 ├── tests/
 │   ├── fount/          # Fount service tests + MAGIC spells
 │   ├── bdo/            # BDO service tests + MAGIC spells
-│   ├── covenant/       # Covenant service tests + MAGIC spells
 │   ├── prof/           # Prof service tests + MAGIC spells
 │   ├── addie/          # Addie service tests + MAGIC spells
 │   ├── julia/          # Julia service tests + MAGIC spells
@@ -66,7 +65,6 @@ npm run test:magic-spells  # All MAGIC spell tests (NEW)
 ```bash
 npm run test:fount
 npm run test:bdo
-npm run test:covenant
 # ... etc for each service
 ```
 
@@ -74,7 +72,6 @@ npm run test:covenant
 ```bash
 npm run test:fount:magic
 npm run test:bdo:magic
-npm run test:covenant:magic
 npm run test:prof:magic
 npm run test:addie:magic
 npm run test:julia:magic
@@ -135,7 +132,6 @@ MAGIC spell tests require:
 2. **Correct ports**:
    - Fount: 3006
    - BDO: 3003
-   - Covenant: 3011
    - Prof: 3012
    - Addie: 3004
    - Julia: 3005
@@ -483,7 +479,6 @@ sharon/
 ├── tests/
 │   ├── fount/          # Fount service tests + MAGIC spells
 │   ├── bdo/            # BDO service tests + MAGIC spells
-│   ├── covenant/       # Covenant service tests + MAGIC spells
 │   ├── prof/           # Prof service tests + MAGIC spells
 │   ├── addie/          # Addie service tests + MAGIC spells
 │   ├── julia/          # Julia service tests + MAGIC spells

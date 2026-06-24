@@ -93,7 +93,6 @@ async function verifyEnvironment() {
 
   // Check application services
   console.log(colorize(COLORS.BRIGHT, '🚀 Application Services:'));
-  const appServices = ['sanora', 'dolores', 'addie', 'covenant'];
 
   for (const serviceName of appServices) {
     const service = serviceConfig[serviceName];

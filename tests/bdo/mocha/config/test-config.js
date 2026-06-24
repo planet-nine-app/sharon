@@ -57,12 +57,6 @@ export const serviceConfig = {
     description: 'Payment processing'
   },
 
-  covenant: {
-    name: 'Covenant',
-    url: `${BASE_URL}/covenant`,
-    directPort: 3011,
-    description: 'Multi-party contracts'
-  },
 
   // Support services
   pref: {

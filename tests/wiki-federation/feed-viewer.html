@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Federated Wiki Feed Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .wiki-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .wiki-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .wiki-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .wiki-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .fetch-btn {
+            background: #10b981;
+            color: white;
+            flex: 1;
+        }
+
+        .fetch-btn:hover {
+            background: #059669;
+        }
+
+        .clear-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .clear-btn:hover {
+            background: #dc2626;
+        }
+
+        .fetch-all-btn {
+            background: #8b5cf6;
+            color: white;
+            flex: 1;
+        }
+
+        .fetch-all-btn:hover {
+            background: #7c3aed;
+        }
+
+        .feeds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .feed-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .feed-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .feed-icon {
+            font-size: 1.8rem;
+        }
+
+        .feed-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .feed-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .feed-status.loading {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .feed-status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .feed-status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .feed-content {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+
+        .feed-content pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+        }
+
+        .feed-content.empty {
+            text-align: center;
+            color: #9ca3af;
+            font-style: italic;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .feed-meta {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .error-message {
+            color: #dc2626;
+            background: #fee2e2;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+        }
+
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: #f3f4f6;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: #1f2937;
+            font-weight: 700;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌐 Federated Wiki Feed Viewer</h1>
+            <p class="subtitle">Test all four Cani* feeds across your federated wiki network</p>
+        </header>
+
+        <div class="controls">
+            <div class="wiki-selector">
+                <button class="wiki-btn active" data-wiki="alice" data-url="http://localhost:3001">
+                    🎵 Alice's Wiki (3001)
+                </button>
+                <button class="wiki-btn" data-wiki="bob" data-url="http://localhost:3002">
+                    📚 Bob's Wiki (3002)
+                </button>
+                <button class="wiki-btn" data-wiki="carol" data-url="http://localhost:3003">
+                    📝 Carol's Wiki (3003)
+                </button>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn fetch-all-btn" onclick="fetchAllFeeds()">
+                    🔄 Fetch All Feeds
+                </button>
+                <button class="action-btn fetch-btn" onclick="fetchFeed('canimus')">
+                    🎵 Fetch Canimus
+                </button>
+                <button class="action-btn fetch-btn" onclick="fetchFeed('canipub')">
+                    📚 Fetch Canipub
+                </button>
+                <button class="action-btn fetch-btn" onclick="fetchFeed('caniblog')">
+                    📝 Fetch Caniblog
+                </button>
+                <button class="action-btn fetch-btn" onclick="fetchFeed('canicook')">
+                    🍳 Fetch Canicook
+                </button>
+                <button class="action-btn clear-btn" onclick="clearAllFeeds()">
+                    🗑️ Clear All
+                </button>
+            </div>
+        </div>
+
+        <div class="feeds-grid">
+            <div class="feed-card">
+                <div class="feed-header">
+                    <span class="feed-icon">🎵</span>
+                    <h2 class="feed-title">Canimus</h2>
+                    <span class="feed-status" id="canimus-status"></span>
+                </div>
+                <div class="feed-content empty" id="canimus-content">
+                    Click "Fetch Canimus" to load music feed (RSS)
+                </div>
+                <div class="feed-meta" id="canimus-meta"></div>
+            </div>
+
+            <div class="feed-card">
+                <div class="feed-header">
+                    <span class="feed-icon">📚</span>
+                    <h2 class="feed-title">Canipub</h2>
+                    <span class="feed-status" id="canipub-status"></span>
+                </div>
+                <div class="feed-content empty" id="canipub-content">
+                    Click "Fetch Canipub" to load books feed (JSON)
+                </div>
+                <div class="feed-meta" id="canipub-meta"></div>
+            </div>
+
+            <div class="feed-card">
+                <div class="feed-header">
+                    <span class="feed-icon">📝</span>
+                    <h2 class="feed-title">Caniblog</h2>
+                    <span class="feed-status" id="caniblog-status"></span>
+                </div>
+                <div class="feed-content empty" id="caniblog-content">
+                    Click "Fetch Caniblog" to load blog feed (JSON)
+                </div>
+                <div class="feed-meta" id="caniblog-meta"></div>
+            </div>
+
+            <div class="feed-card">
+                <div class="feed-header">
+                    <span class="feed-icon">🍳</span>
+                    <h2 class="feed-title">Canicook</h2>
+                    <span class="feed-status" id="canicook-status"></span>
+                </div>
+                <div class="feed-content empty" id="canicook-content">
+                    Click "Fetch Canicook" to load recipes feed (JSON)
+                </div>
+                <div class="feed-meta" id="canicook-meta"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Feed configuration
+        const FEEDS = {
+            canimus: {
+                endpoint: '/plugin/mutopia/feed',
+                altEndpoint: '/plugin/mutopia/library',
+                type: 'xml',
+                icon: '🎵',
+                name: 'Canimus (Music)'
+            },
+            canipub: {
+                endpoint: '/plugin/books/feed',
+                altEndpoint: '/plugin/books/library',
+                type: 'json',
+                icon: '📚',
+                name: 'Canipub (Books)'
+            },
+            caniblog: {
+                endpoint: '/plugin/blogs/feed',
+                altEndpoint: '/plugin/blogs/posts',
+                type: 'json',
+                icon: '📝',
+                name: 'Caniblog (Blogs)'
+            },
+            canicook: {
+                endpoint: '/plugin/recipes/feed',
+                altEndpoint: '/plugin/recipes/recipes',
+                type: 'json',
+                icon: '🍳',
+                name: 'Canicook (Recipes)'
+            }
+        };
+
+        // Current wiki selection
+        let currentWiki = {
+            name: 'alice',
+            url: 'http://localhost:3001'
+        };
+
+        // Wiki button handling
+        document.querySelectorAll('.wiki-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.wiki-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentWiki = {
+                    name: this.dataset.wiki,
+                    url: this.dataset.url
+                };
+                console.log('Selected wiki:', currentWiki);
+            });
+        });
+
+        // Fetch a single feed
+        async function fetchFeed(feedName) {
+            const feed = FEEDS[feedName];
+            const statusEl = document.getElementById(`${feedName}-status`);
+            const contentEl = document.getElementById(`${feedName}-content`);
+            const metaEl = document.getElementById(`${feedName}-meta`);
+
+            // Set loading state
+            statusEl.textContent = 'Loading...';
+            statusEl.className = 'feed-status loading';
+            contentEl.innerHTML = '<div class="loading"><div class="spinner"></div><p>Fetching from ' + currentWiki.name + '\'s wiki...</p></div>';
+            contentEl.className = 'feed-content';
+
+            const url = currentWiki.url + feed.endpoint;
+            const startTime = Date.now();
+
+            try {
+                const response = await fetch(url);
+                const loadTime = Date.now() - startTime;
+
+                if (!response.ok) {
+                    // Try alternate endpoint
+                    const altUrl = currentWiki.url + feed.altEndpoint;
+                    const altResponse = await fetch(altUrl);
+
+                    if (!altResponse.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    // Use alternate response
+                    await displayFeedData(feedName, altResponse, loadTime, altUrl);
+                } else {
+                    await displayFeedData(feedName, response, loadTime, url);
+                }
+
+                statusEl.textContent = 'Success';
+                statusEl.className = 'feed-status success';
+
+            } catch (error) {
+                console.error(`Error fetching ${feedName}:`, error);
+                statusEl.textContent = 'Error';
+                statusEl.className = 'feed-status error';
+                contentEl.innerHTML = `<div class="error-message">❌ ${error.message}</div>`;
+                contentEl.className = 'feed-content';
+
+                metaEl.innerHTML = `
+                    <div class="stats">
+                        <div class="stat">
+                            <span class="stat-label">Wiki:</span>
+                            <span class="stat-value">${currentWiki.name}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Status:</span>
+                            <span class="stat-value">Failed</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Display feed data
+        async function displayFeedData(feedName, response, loadTime, url) {
+            const feed = FEEDS[feedName];
+            const contentEl = document.getElementById(`${feedName}-content`);
+            const metaEl = document.getElementById(`${feedName}-meta`);
+
+            const contentType = response.headers.get('content-type');
+            let data, itemCount = 0;
+
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
+                itemCount = countItems(data);
+                contentEl.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } else if (contentType && (contentType.includes('application/xml') || contentType.includes('text/xml') || contentType.includes('application/rss+xml'))) {
+                const text = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(text, 'text/xml');
+                itemCount = xmlDoc.querySelectorAll('item').length;
+                contentEl.innerHTML = `<pre>${escapeHtml(text)}</pre>`;
+            } else {
+                const text = await response.text();
+                contentEl.innerHTML = `<pre>${escapeHtml(text)}</pre>`;
+            }
+
+            contentEl.className = 'feed-content';
+
+            metaEl.innerHTML = `
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">Wiki:</span>
+                        <span class="stat-value">${currentWiki.name}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Items:</span>
+                        <span class="stat-value">${itemCount}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Load Time:</span>
+                        <span class="stat-value">${loadTime}ms</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Type:</span>
+                        <span class="stat-value">${contentType?.split(';')[0] || 'unknown'}</span>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.75rem; color: #9ca3af; word-break: break-all;">
+                    ${url}
+                </div>
+            `;
+        }
+
+        // Count items in feed data
+        function countItems(data) {
+            if (Array.isArray(data)) return data.length;
+            if (data.items && Array.isArray(data.items)) return data.items.length;
+            if (data.tracks && Array.isArray(data.tracks)) return data.tracks.length;
+            if (data.books && Array.isArray(data.books)) return data.books.length;
+            if (data.posts && Array.isArray(data.posts)) return data.posts.length;
+            if (data.recipes && Array.isArray(data.recipes)) return data.recipes.length;
+            return 0;
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Fetch all feeds
+        async function fetchAllFeeds() {
+            for (const feedName of Object.keys(FEEDS)) {
+                await fetchFeed(feedName);
+                // Small delay between requests
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+
+        // Clear all feeds
+        function clearAllFeeds() {
+            for (const feedName of Object.keys(FEEDS)) {
+                const statusEl = document.getElementById(`${feedName}-status`);
+                const contentEl = document.getElementById(`${feedName}-content`);
+                const metaEl = document.getElementById(`${feedName}-meta`);
+
+                statusEl.textContent = '';
+                statusEl.className = 'feed-status';
+                contentEl.innerHTML = `Click "Fetch ${FEEDS[feedName].name}" to load feed`;
+                contentEl.className = 'feed-content empty';
+                metaEl.innerHTML = '';
+            }
+        }
+
+        // Log startup
+        console.log('Federated Wiki Feed Viewer loaded');
+        console.log('Current wiki:', currentWiki);
+        console.log('Available feeds:', Object.keys(FEEDS));
+    </script>
+</body>
+</html>

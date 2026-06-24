@@ -24,7 +24,6 @@ services:
       - "3008:3008"   # prof
       - "3009:3009"   # minnie
       - "3010:3010"   # aretha
-      - "3011:3011"   # covenant
       - "7243:7243"   # sanora
       - "7277:7277"   # sanora admin
       - "2525:2525"   # email

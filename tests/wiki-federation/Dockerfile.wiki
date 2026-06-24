@@ -1,0 +1,26 @@
+# Custom wiki image with sessionless security
+FROM dobbs/farm:latest
+
+# Switch to root for global npm install
+USER root
+
+# Install wiki-security-sessionless globally for sessionless authentication
+# This enables authentication using secp256k1 keypairs instead of traditional sessions
+# Works with owner.json file containing pubKey for verification
+# Installed globally so it persists even when /home/node/.wiki is mounted
+RUN npm install -g wiki-security-sessionless
+
+# Switch back to node user for runtime
+USER node
+
+# Note: Wiki plugins will be added later via other mechanisms
+# This image only provides the base wiki + sessionless security
+
+WORKDIR /home/node/.wiki
+
+# Expose wiki port
+EXPOSE 3000
+
+# Start wiki in farm mode with friends security
+# Sessionless authentication is enabled via wiki-security-sessionless module
+CMD ["wiki", "--farm", "--autoseed", "--security_type=friends"]

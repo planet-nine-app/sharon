@@ -1,0 +1,16 @@
+{
+  "farm": true,
+  "autoseed": true,
+  "security_type": "friends",
+  "cookieSecret": "bob-secret-key-change-in-production",
+  "admin": "bob@example.com",
+  "id": "bob.localhost",
+  "port": 3000,
+  "wikiDomains": {
+    "bob.localhost": {}
+  },
+  "neighbors": [
+    "alice.localhost",
+    "carol.localhost"
+  ]
+}
